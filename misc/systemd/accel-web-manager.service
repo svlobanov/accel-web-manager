@@ -1,0 +1,17 @@
+[Unit]
+Description=Accel-PPP Web Manager Backend
+After=network.target
+
+[Service]
+WorkingDirectory=/var/lib/accel-web-manager/backend
+ExecStart=gunicorn3 -w 4 -b 127.0.0.1:8123 accel-web-manager:app
+Restart=always
+
+DynamicUser=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict
+
+[Install]
+Alias=accel-web-manager.service
+WantedBy=multi-user.target
