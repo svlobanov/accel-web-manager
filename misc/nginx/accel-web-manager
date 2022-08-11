@@ -1,0 +1,64 @@
+# Default server configuration
+#
+server {
+	listen 8018 default_server;
+	listen [::]:8018 default_server;
+
+	server_name _;
+
+	# SSL configuration
+	#
+	# listen 8443 ssl default_server;
+	# listen [::]:8443 ssl default_server;
+	#
+	# include snippets/snakeoil.conf;
+
+	root /var/lib/accel-web-manager/frontend;
+
+    auth_basic           "Accel-PPP Web Manager Area";
+    auth_basic_user_file /var/lib/accel-web-manager/nginx/users.htpasswd; 
+
+	index index.html;
+
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	# Proxy API requests to Backend
+	location /api/ {
+		proxy_pass http://127.0.0.1:8123/;
+	}
+}
+
+
+# Virtual Host configuration for accel-web.domain.tld
+#
+#server {
+#	listen 80;
+#	listen [::]:80;
+#
+#	server_name accel-web.domain.tld;
+#
+#	SSL configuration
+#
+#	listen 8443 ssl;
+#	listen [::]:8443 ssl;
+#
+#	include snippets/snakeoil.conf;
+#	root /var/lib/accel-web-manager/frontend;
+#
+#	auth_basic           "Accel-PPP Web Manager Area";
+#	auth_basic_user_file /var/lib/accel-web-manager/nginx/users.htpasswd; 
+#
+#	index index.html;
+#
+#	location / {
+#		try_files $uri $uri/ =404;
+#	}
+#
+#	# Proxy API requests to Backend
+#	location /api/ {
+#		proxy_pass http://127.0.0.1:8123/;
+#	}
+#}
