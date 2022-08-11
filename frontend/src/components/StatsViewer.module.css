@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.brasInfo {
+  text-align: left;
+  border: 1px solid black;
+  padding-left: 5px;
+  padding-right: 5px;
+}
