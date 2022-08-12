@@ -89,6 +89,7 @@ session_columns = {
         "header": "Rate-Limit",
         "type": "string",
         "operator": "contains",
+        "sort": "rate",
     },
     "type": {
         "name": "ty",

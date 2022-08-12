@@ -3,14 +3,23 @@ import filesize from 'filesize'
 import { Duration } from 'luxon'
 
 import { sortIPv4 } from './sortIPv4'
+import { sortRate } from './sortRate'
 
 export const processColumnSettings = (columns) => {
     columns.forEach((column) => {
         if (column['filterEditor'] === "SelectFilter")
             column['filterEditor'] = SelectFilter;
 
-        if (column['sort'] === 'ipv4')
-            column['sort'] = sortIPv4 // correct sort ipv4 (1.1.1.8 < 1.1.1.10)
+        switch (column['sort']) {
+            case 'ipv4':
+                column['sort'] = sortIPv4 // correct sort ipv4 (1.1.1.8 < 1.1.1.10)
+                break
+            case 'rate':
+                column['sort'] = sortRate // correct sort rate-limits ('50/50' < '4000/4000')
+                break;
+            default:
+                break
+        }
 
         switch (column['render']) {
             case 'size': // bytes to KB, MB, etc (using 1024 divisor)
