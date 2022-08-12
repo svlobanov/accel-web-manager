@@ -52,7 +52,13 @@ session_columns = {
         "operator": "gte",
         "render": "Duration",
     },
-    "ip": {"name": "ip", "header": "IP", "type": "string", "operator": "contains"},
+    "ip": {
+        "name": "ip",
+        "header": "IP",
+        "type": "string",
+        "operator": "contains",
+        "sort": "ipv4",
+    },
     "ip6": {"name": "i6", "header": "IPv6", "type": "string", "operator": "contains"},
     "ip6-dp": {
         "name": "i6d",
