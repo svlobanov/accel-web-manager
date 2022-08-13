@@ -19,8 +19,8 @@ import { renderSessionContextMenu } from './utils/ui/renderSessionContextMenu';
 import './App.css';
 
 import { Button } from 'rsuite'
-import 'rsuite/dist/rsuite.min.css';
-//import 'custom-theme.less';
+
+import './custom-theme.less';
 
 const App = () => {
   const [whatToShow, setWhatToShow] = useState('sessions') // what to show (grid of sessions, stats, etc)
