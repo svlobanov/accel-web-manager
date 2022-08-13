@@ -1,14 +1,17 @@
 import React from 'react';
+import { SelectPicker } from 'rsuite';
 
-const BrasList = (props) => {
+const BrasList = ({selectedBras, setSelectedBras, brasList}) => {
     return (
-        <select onChange={props.onChange} value={props.value}>
-            <option value='all' key={0}>All</option>
-            {
-                props.brasList.map((val, index) =>
-                    <option value={val} key={index + 1}>{val}</option>)
-            }
-        </select>
+        <SelectPicker
+            size='xs'
+            label='BRAS'
+            placeholder='All'
+            searchable={false}
+            value={selectedBras}
+            data={brasList.map(item => ({ label: item, value: item }))}
+            onChange={(selectedBras) => setSelectedBras(selectedBras)}
+        />
     );
 };
 

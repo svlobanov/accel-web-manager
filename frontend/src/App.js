@@ -18,6 +18,10 @@ import { renderSessionContextMenu } from './utils/ui/renderSessionContextMenu';
 
 import './App.css';
 
+import { Button } from 'rsuite'
+import 'rsuite/dist/rsuite.min.css';
+//import 'custom-theme.less';
+
 const App = () => {
   const [whatToShow, setWhatToShow] = useState('sessions') // what to show (grid of sessions, stats, etc)
   const [sessionInfoReady, setSessionInfoReady] = useState(false) // true if info received from backend (columns, filters, etc)
@@ -28,7 +32,7 @@ const App = () => {
   const [stats, setStats] = useState(false); // sessions received from backend
   const [filterValue, setFilterValue] = useState([]); // session filters on grid received from backend
   const [brasList, setBrasList] = useState([]); // bras list received from backend
-  const [selectedBras, setSelectedBras] = useState('all'); // currently selected bras
+  const [selectedBras, setSelectedBras] = useState(null); // currently selected bras
   const [gridSettings, setGridSettings] = useState({}); // grid settings received from backend (pagination, etc)
   const [toastSettings, setToastSettings] = useState({}); // notifications settings
   const [selectedSessions, setSelectedSessions] = useState({}) // selected sessions (to save selected sessions on reload)
@@ -88,7 +92,7 @@ const App = () => {
   // (re)load session from backend
   const loadSessions = async () => {
     setDisableActions(true)
-    const sessions = await getSessions(selectedBras)
+    const sessions = await getSessions(selectedBras === null ? 'all' : selectedBras)
     if (typeof sessions === 'string') {
       toast.error('Error loading sessions at ' + getTime() + ': ' + sessions)
     } else {
@@ -106,7 +110,7 @@ const App = () => {
 
   const loadStats = async () => {
     setDisableActions(true)
-    const stats = await getStats(selectedBras)
+    const stats = await getStats(selectedBras === null ? 'all' : selectedBras)
     if (typeof stats === 'string') {
       toast.error('Error loading stats at ' + getTime() + ': ' + stats)
     } else {
@@ -122,9 +126,6 @@ const App = () => {
     setWhatToShow('stats')
   }
 
-  const onBrasSelected = useCallback((props) => {
-    setSelectedBras(props.target.value)
-  }, [])
 
   const renderSessionContextMenu2 = useCallback((menuProps, other) => {
     if (privileges['dropSession'] === true)
@@ -141,14 +142,14 @@ const App = () => {
       <ToastContainer {...toastSettings} />
       <div className='Menu'>
         <div className='MenuButtons'>
-          Bras list: <BrasList onChange={onBrasSelected} value={selectedBras} brasList={brasList} />&nbsp;
+          <BrasList value={selectedBras} brasList={brasList} setSelectedBras={setSelectedBras} />&nbsp;
           {privileges['showSessions'] === true ?
-            <button onClick={onGetSessions} disabled={disableActions || !sessionInfoReady}>Get Sessions</button>
+            <Button size='xs' onClick={onGetSessions} style={{ cursorDisabled: "default" }} disabled={disableActions || !sessionInfoReady}>Get Sessions</Button>
             : ''
           }
           &nbsp;
           {privileges['showStats'] === true ?
-            <button onClick={onGetStats} disabled={disableActions}>Get Stats</button>
+            <Button size='xs' onClick={onGetStats} disabled={disableActions}>Get Stats</Button>
             : ''
           }
         </div>
