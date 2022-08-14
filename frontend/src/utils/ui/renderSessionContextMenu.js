@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import { dropSession } from '../dropSession';
 
-export const renderSessionContextMenu = (loadSessions, menuProps, { rowProps, cellProps }) => {
+export const renderSessionContextMenu = (privileges, loadSessions, menuProps, { rowProps, cellProps }) => {
   const sessionName = (ses) => {
     return [ses['ke'], ses['if'], ses['us']].join(' ')
   }
