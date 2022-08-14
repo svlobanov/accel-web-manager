@@ -12,7 +12,7 @@ export const renderSessionContextMenu = (privileges, loadSessions, menuProps, { 
 
   const terminate = async (ses, mode) => {
     const drop = await dropSession(ses['br'], ses['si'], mode)
-    
+
     const msgPrefix = "Drop session (" + mode + ") " + sessionName(ses)
 
     if (drop === 'ok') {
@@ -26,15 +26,17 @@ export const renderSessionContextMenu = (privileges, loadSessions, menuProps, { 
   }
 
   const ses = rowProps.data
-  menuProps.autoDismiss = false
-  menuProps.items = [
-    {
-      label: terminateLabel(ses, 'soft'),
-      onClick: async () => { terminate(ses, 'soft') }
-    },
-    {
-      label: terminateLabel(ses, 'hard'),
-      onClick: async () => { terminate(ses, 'hard') }
-    }
-  ]
+  if (privileges['dropSession'] === true) {
+    menuProps.autoDismiss = false
+    menuProps.items = [
+      {
+        label: terminateLabel(ses, 'soft'),
+        onClick: async () => { terminate(ses, 'soft') }
+      },
+      {
+        label: terminateLabel(ses, 'hard'),
+        onClick: async () => { terminate(ses, 'hard') }
+      }
+    ]
+  }
 }

@@ -7,20 +7,20 @@ import { toast } from 'react-toastify';
 import classes from './Menu.module.css'
 
 const Menu = ({ privileges, selectedBras, setSelectedBras, brasList, disableActions, sessionInfoReady,
-    updateInfo, setWhatToShow, loadStats, loadSessions, stats, sessions }) => {
+    loadStats, loadSessions, stats, sessions }) => {
 
     const onGetStats = async () => {
         toast.clearWaitingQueue()
         toast.dismiss()
         await loadStats()
-        setWhatToShow('stats')
+        //setWhatToShow('stats')
     }
 
     const onGetSessions = async () => {
         toast.clearWaitingQueue()
         toast.dismiss()
         await loadSessions()
-        setWhatToShow('sessions')
+        //setWhatToShow('sessions')
     }
 
     return (

@@ -52,18 +52,18 @@ const App = () => {
       setBrasList(resp.data['brasList']);
       setToastSettings(resp.data['toastSettings']);
       setPrivileges(resp.data['privileges'] === undefined ? {} : resp.data['privileges']);
+
+      const sessions = await getSessions('all')
+      if (typeof sessions === 'string') {
+        toast.error('Error loading sessions at ' + getTime() + ': ' + sessions)
+      } else {
+        setSessions(sessions)
+      }
       setSessionInfoReady(true);
+      setDisableActions(false)
     }
     initSettings()
   }, [])
-
-  // load sessions when it's ready 
-  useEffect(() => {
-    if (sessionInfoReady === true && privileges['showSessions'] === true)
-      loadSessions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionInfoReady, privileges])
-
 
   // (re)load session from backend
   const loadSessions = async () => {
@@ -73,6 +73,7 @@ const App = () => {
       toast.error('Error loading sessions at ' + getTime() + ': ' + sessions)
     } else {
       setSessions(sessions)
+      setWhatToShow('sessions')
     }
     setDisableActions(false)
   }
@@ -84,6 +85,7 @@ const App = () => {
       toast.error('Error loading stats at ' + getTime() + ': ' + stats)
     } else {
       setStats(stats)
+      setWhatToShow('stats')
     }
     setDisableActions(false)
   }
