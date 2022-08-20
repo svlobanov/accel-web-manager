@@ -14,8 +14,6 @@ Change port and hostname inside the script if required
 
 User-Name, IP and Calling-Sid usually contain personal data that should be removed before publishing. Obfuscator script does this job
 
-It is highly recommended to review `new_ip` function in `obfuscator.py`. At least, change the constants 18,15,97,23 or implement some new logic for IPv4 obfuscation 
-
 ```bash
 $ cd data
 $ ../obfuscator.py

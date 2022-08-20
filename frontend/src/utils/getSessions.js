@@ -1,7 +1,11 @@
 import axios from 'axios';
 
-export const getSessions = async (bras) => {
-    const resp = await axios.get("sessions/" + bras).catch((e) => { return e.toString() })
+export const getSessions = async (bras, dupSettings) => {
+    let request = "sessions/" + bras
+    if (dupSettings !== undefined) {
+        request = "duplicates/" + bras + "/" + dupSettings['key']
+    }
+    const resp = await axios.get(request).catch((e) => { return e.toString() })
     if (typeof resp === 'string') { // exception
         return resp
     } else if (resp.data === undefined)

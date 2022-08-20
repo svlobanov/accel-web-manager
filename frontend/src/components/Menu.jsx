@@ -1,26 +1,18 @@
 import React from 'react';
 import BrasList from './BrasList';
 import InfoBox from './InfoBox';
+import SessionsButton from './SessionsButton';
+
 import { Button } from 'rsuite';
-import { toast } from 'react-toastify';
 
 import classes from './Menu.module.css'
 
 const Menu = ({ privileges, selectedBras, setSelectedBras, brasList, disableActions, sessionInfoReady,
-    loadStats, loadSessions, stats, sessions }) => {
+    loadStats, loadSessions, stats, sessions, duplicateKeys }) => {
 
     const onGetStats = async () => {
-        toast.clearWaitingQueue()
-        toast.dismiss()
-        await loadStats()
+        loadStats()
         //setWhatToShow('stats')
-    }
-
-    const onGetSessions = async () => {
-        toast.clearWaitingQueue()
-        toast.dismiss()
-        await loadSessions()
-        //setWhatToShow('sessions')
     }
 
     return (
@@ -28,7 +20,7 @@ const Menu = ({ privileges, selectedBras, setSelectedBras, brasList, disableActi
             <div className={classes.MenuButtons}>
                 <BrasList value={selectedBras} brasList={brasList} setSelectedBras={setSelectedBras} />&nbsp;
                 {privileges['showSessions'] === true ?
-                    <Button size='xs' onClick={onGetSessions} disabled={disableActions || !sessionInfoReady}>Get Sessions</Button>
+                    <SessionsButton loadSessions={loadSessions} duplicateKeys={duplicateKeys} disabled={disableActions || !sessionInfoReady}>Get Sessions</SessionsButton>
                     : ''
                 }
                 &nbsp;

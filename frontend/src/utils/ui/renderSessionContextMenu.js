@@ -15,12 +15,13 @@ export const renderSessionContextMenu = (privileges, loadSessions, menuProps, { 
 
     const msgPrefix = "Drop session (" + mode + ") " + sessionName(ses)
 
+    toast.clearWaitingQueue()
+    toast.dismiss()
     if (drop === 'ok') {
       toast.success(msgPrefix + ": done")
-      loadSessions()
+      loadSessions(undefined, true, false)
     } else {
       toast.error(msgPrefix + ": " + drop)
-      loadSessions()
     }
     menuProps.onDismiss();
   }

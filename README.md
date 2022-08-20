@@ -6,6 +6,7 @@
 - **View Accel-PPP statistics** (using 'accel-cmd show stat')
 - **Drop session** (soft and hard)
 - **Find sessions** (sort, per-column filters, multiple filters)
+- **Find duplicate session** (by User-Name, IPv4, Calling-Sid, Called-Sid)
 - **Multiple BRAS** (one view for multiple BRAS)
 - **Customizable session viewer** (column settings, default filter logic)
 - **Exception handling** (System continues to work (show what it can) and notifies user if some BRAS are down)
@@ -43,8 +44,8 @@ $ sudo apt install python3-flask python3-flask-compress python3-flask-cors pytho
 
 Download tarball and extract
 ```bash
-$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.1.0/accel-web-manager-v0.1.0.txz
-$ sudo tar -xf accel-web-manager-v0.1.0.txz -C /var/lib/
+$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.2.0/accel-web-manager-v0.2.0.txz
+$ sudo tar -xf accel-web-manager-v0.2.0.txz -C /var/lib/
 ```
 
 Create systemd service for backend and run
@@ -80,6 +81,14 @@ $ sudo systemctl reload nginx
 
 Now follow http://YOUR_SERVER_IP_OR_HOSTNAME:8018/ (default creds: admin/accel if you have not change the password)
 
+### Upgrade guide
+
+1. Backup `/var/lib/accel-web-manager/backend/*_settings.py`, `/var/lib/accel-web-manager/nginx/*`
+2. Install the new version using installation guide
+3. Check the diff between old and new settings files. Modify new `*_settings.py` files according to backed up files. Most probably, you only need to return your old `bras_settings.py`
+4. Restart the backend: `sudo systemctl enable accel-web-manager`
+5. Refresh Web-UI in your browser (ctrl/cmd+shift+r in chrome)
+
 ## Configuration
 
 > Be careful with spaces when editing .py configuration files
@@ -101,6 +110,10 @@ Edit `/var/lib/accel-web-manager/backend/role_settings.py` to disable features. 
 ### Session columns customization
 
 Edit `/var/lib/accel-web-manager/backend/column_settings.py` to change session columns order and other attributes
+
+### Find duplicate sessions
+
+Edit `/var/lib/accel-web-manager/backend/duplicate_settings.py` to change keys and settings for finding duplicates
 
 ### Other visual settings
 

@@ -28,7 +28,9 @@ const App = () => {
   const [selectedBras, setSelectedBras] = useState(null); // currently selected bras
   const [gridSettings, setGridSettings] = useState({}); // grid settings received from backend (pagination, etc)
   const [toastSettings, setToastSettings] = useState({}); // notifications settings
-  const [privileges, setPrivileges] = useState({}) //useState({showStat: false, dropSession: false, showSessions: false})
+  const [privileges, setPrivileges] = useState({});
+  const [duplicateKeys, setDuplicateKeys] = useState({}); // find session by .., (key => display name)
+  const [lastDupSettings, setLastDupSettings] = useState(undefined); //for sessions reloading
 
   // load settings from backend
   useEffect(() => {
@@ -52,6 +54,7 @@ const App = () => {
       setBrasList(resp.data['brasList']);
       setToastSettings(resp.data['toastSettings']);
       setPrivileges(resp.data['privileges'] === undefined ? {} : resp.data['privileges']);
+      setDuplicateKeys(resp.data['duplicateKeys'] === undefined ? {} : resp.data['duplicateKeys']);
 
       const sessions = await getSessions('all')
       if (typeof sessions === 'string') {
@@ -66,12 +69,18 @@ const App = () => {
   }, [])
 
   // (re)load session from backend
-  const loadSessions = async () => {
+  const loadSessions = async (dupSettings, reload = false, clearToasts = true) => {
+    if (clearToasts) {
+      toast.clearWaitingQueue()
+      toast.dismiss()
+    }
     setDisableActions(true)
-    const sessions = await getSessions(selectedBras === null ? 'all' : selectedBras)
+    const sessions = await getSessions(selectedBras === null ? 'all' : selectedBras, reload ? lastDupSettings : dupSettings)
     if (typeof sessions === 'string') {
       toast.error('Error loading sessions at ' + getTime() + ': ' + sessions)
     } else {
+      if (!reload)
+        setLastDupSettings(dupSettings) // store settings for reload
       setSessions(sessions)
       setWhatToShow('sessions')
     }
@@ -79,6 +88,8 @@ const App = () => {
   }
 
   const loadStats = async () => {
+    toast.clearWaitingQueue()
+    toast.dismiss()
     setDisableActions(true)
     const stats = await getStats(selectedBras === null ? 'all' : selectedBras)
     if (typeof stats === 'string') {
@@ -103,6 +114,7 @@ const App = () => {
         setWhatToShow={setWhatToShow}
         loadStats={loadStats}
         loadSessions={loadSessions}
+        duplicateKeys={duplicateKeys}
         sessions={sessions} /* for InfoBox */
         stats={stats} /* for InfoBox */
       />

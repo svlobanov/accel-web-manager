@@ -11,10 +11,13 @@ from flask import Flask, make_response, jsonify, request, abort
 from flask_cors import CORS
 from flask_compress import Compress
 
+from get_duplicates import get_duplicates
+
 from column_settings import session_columns, bras_columns
 from bras_settings import bras_options
 from visual_settings import grid_settings, toast_settings
 from role_settings import privileges
+from duplicate_settings import duplicate_columns
 
 if sys.hexversion < 0x03070000:
     sys.exit("Python 3.7 or newer is required")  # dict must be ordered
@@ -114,6 +117,19 @@ def sessions(bras):
     (issues, sessions) = get_sessions_multiple(filt_bras_options)
     return jsonify({"issues": issues, "sessions": sessions})
 
+# Rest controller for finding duplicates sessions
+@app.route("/duplicates/<bras>/<key>")
+def sessions_duplicates(bras, key):
+    if privileges["showSessions"] != True:
+        abort(403)
+
+    filt_bras_options = bras_options  # no bras filter (all sessions)
+    if bras != "all":  # if there is a filter by bras
+        filt_bras_options = {bras: bras_options[bras]}
+
+    (issues, sessions) = get_sessions_multiple(filt_bras_options)
+    session_duplicates = get_duplicates(sessions, key)
+    return jsonify({"issues": issues, "sessions": session_duplicates})
 
 # Send 'show stat' command to the bras and parse the output
 def get_stats(bras, bras_options, result):
@@ -171,6 +187,7 @@ def columns():
             "toastSettings": toast_settings,
             "brasList": list(bras_options.keys()),
             "privileges": privileges,
+            "duplicateKeys": duplicate_columns,
         }
     )
 

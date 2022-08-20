@@ -18,7 +18,8 @@ cd ..
 cp -Rpv frontend/build "${DIR}/frontend"
 
 # Backend
-cp -Rpv backend "${DIR}/backend"
+mkdir -pv "${DIR}/backend"
+cp -pv backend/*.py "${DIR}/backend"
 
 # Systemd unit
 cp -Rpv misc/systemd "${DIR}/systemd"
@@ -31,4 +32,7 @@ cp -v README.md "${DIR}/"
 
 # Build archive
 cd "${DIR0}"
-tar --owner root:0 --group root:0 -Jcf accel-web-manager-$VERSION.txz accel-web-manager/
+TAR=tar
+gtar --version 2>/dev/null 1>/dev/null && TAR=gtar # workaround for macos
+$TAR --owner root:0 --group root:0 -Jcf accel-web-manager-$VERSION.txz accel-web-manager/ || \
+    echo "ERROR: Please install gnu tar (gtar)"
