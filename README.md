@@ -33,7 +33,47 @@ In general, installation is easy and has minimal dependencies. All dependecies c
 - Python >= 3.7 for backend
 - Debian Linux (>= 10 is recommended). It easy to adapt for another distros
 
-### Installation guide
+### Installation guide (using .deb package)
+You can install accel-web-manager directly on BRAS or any other server.
+
+Download package and install
+```bash
+$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.2.1/accel-web-manager_0.2.1-1_all.deb
+$ sudo apt install ./accel-web-manager_0.2.1-1_all.deb
+```
+
+Check backend running status
+```bash
+$ sudo systemctl status accel-web-manager
+```
+
+Enable nginx configuration
+```bash
+$ sudo ln -s ../sites-available/accel-web-manager /etc/nginx/sites-enabled/
+```
+
+Optional step: setup SSL in the nginx configuration file. Please use nginx docs or a guide provided by your SSL provider
+
+Highly recommended step: change admin password in `/var/lib/accel-web-manager/nginx/users.htpasswd`
+
+```bash
+$ sudo htpasswd /var/lib/accel-web-manager/nginx/users.htpasswd admin
+```
+Reload nginx
+```bash
+$ sudo systemctl reload nginx
+```
+
+Now follow http://YOUR_SERVER_IP_OR_HOSTNAME:8018/ (default creds: admin/accel if you have not change the password)
+
+### Upgrade guide (using .deb package)
+
+1. Download and install the new version using the command `sudo dpkg --force-confask -i accel-web-manager_0.2.1-1_all.deb`
+2. Check the diff between old and new settings files that dpkg asked about. If you answered Y, then an old file has '.dpkg-old' suffix. If you answered N, then a new file has '.dpkg-dist' suffix. You do not need to change '.dpkg-old' or '.dpkg-dist' files. Change only .py settings files
+3. Restart the backend (`sudo systemctl restart accel-web-manager`) if you changed config files on step 2
+4. Refresh Web-UI in your browser (ctrl/cmd+shift+r in chrome)
+
+### Installation guide (using tarball)
 You can install accel-web-manager directly on BRAS or any other server.
 
 Install dependencies.
@@ -44,8 +84,8 @@ $ sudo apt install python3-flask python3-flask-compress python3-flask-cors pytho
 
 Download tarball and extract
 ```bash
-$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.2.0/accel-web-manager-v0.2.0.txz
-$ sudo tar -xf accel-web-manager-v0.2.0.txz -C /var/lib/
+$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.2.1/accel-web-manager-v0.2.1.txz
+$ sudo tar -xf accel-web-manager-v0.2.1.txz -C /var/lib/
 ```
 
 Create systemd service for backend and run
@@ -81,12 +121,12 @@ $ sudo systemctl reload nginx
 
 Now follow http://YOUR_SERVER_IP_OR_HOSTNAME:8018/ (default creds: admin/accel if you have not change the password)
 
-### Upgrade guide
+### Upgrade guide (using tarball)
 
 1. Backup `/var/lib/accel-web-manager/backend/*_settings.py`, `/var/lib/accel-web-manager/nginx/*`
 2. Install the new version using installation guide
 3. Check the diff between old and new settings files. Modify new `*_settings.py` files according to backed up files. Most probably, you only need to return your old `bras_settings.py`
-4. Restart the backend: `sudo systemctl enable accel-web-manager`
+4. Restart the backend: `sudo systemctl restart accel-web-manager`
 5. Refresh Web-UI in your browser (ctrl/cmd+shift+r in chrome)
 
 ## Configuration
