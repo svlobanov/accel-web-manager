@@ -39,16 +39,24 @@ def exec_command(bras_options, command):
 
 # Send 'show sessions' command to the bras and parse the output
 def get_sessions(bras, bras_options, result):
-    (exit_code, output, err) = exec_command(
-        bras_options, ["show sessions"] + [",".join(session_columns.keys())]
-    )
+    try:
+        (exit_code, output, err) = exec_command(
+            bras_options, ["show sessions"] + [",".join(session_columns.keys())]
+        )
+    except Exception as e:
+        result["status"] = str(e)
+        result["sessions"] = []
+        return
+
     columns = {}  # parsed from header
     sessions = []
     if exit_code == 0:
         lines = output.splitlines()
 
         if len(lines) < 2:
-            return (1, sessions)  # some issue, it shouldn't happen
+            result["status"] = "header not found (< 2 lines)"
+            result["sessions"] = []
+            return
 
         header = lines[0].split("|")
         for column in header:
@@ -117,6 +125,7 @@ def sessions(bras):
     (issues, sessions) = get_sessions_multiple(filt_bras_options)
     return jsonify({"issues": issues, "sessions": sessions})
 
+
 # Rest controller for finding duplicates sessions
 @app.route("/duplicates/<bras>/<key>")
 def sessions_duplicates(bras, key):
@@ -131,10 +140,15 @@ def sessions_duplicates(bras, key):
     session_duplicates = get_duplicates(sessions, key)
     return jsonify({"issues": issues, "sessions": session_duplicates})
 
+
 # Send 'show stat' command to the bras and parse the output
 def get_stats(bras, bras_options, result):
-
-    (exit_code, output, err) = exec_command(bras_options, ["show stat"])
+    try:
+        (exit_code, output, err) = exec_command(bras_options, ["show stat"])
+    except Exception as e:
+        result["status"] = str(e)
+        result["stats"] = str(e)
+        return
     if exit_code == 0:
         result["status"] = "ok"
         result["stats"] = output
@@ -197,10 +211,12 @@ def columns():
 def drop_session(bras, sid, mode):
     if privileges["dropSession"] != True:
         abort(403)
-
-    (code, out, err) = exec_command(
-        bras_options[bras], ["terminate sid " + sid + " " + mode]
-    )
+    try:
+        (code, out, err) = exec_command(
+            bras_options[bras], ["terminate sid " + sid + " " + mode]
+        )
+    except Exception as e:
+        return jsonify({"status": str(e)})
 
     if code == 0 and out == "" and err == "":
         return jsonify({"status": "ok"})
