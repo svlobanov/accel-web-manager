@@ -3,6 +3,6 @@ Maintainer: Sergey V. Lobanov <sergey@lobanov.in>
 Architecture: all
 Description: Accel-PPP Web UI
 Section: admin
-Depends: python3 (>= 3.7), python3-flask, python3-flask-compress, python3-flask-cors, gunicorn3, python3-gunicorn
+Depends: python3 (>= 3.7), python3-flask, python3-flask-compress, python3-flask-cors, gunicorn3 | gunicorn, python3-gunicorn
 Recommends: nginx, apache2-utils
 Origin: https://github.com/svlobanov/accel-web-manager
