@@ -1,0 +1,84 @@
+name: Build and Package
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  Build-on-Ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Repository info
+        run: |
+          git branch
+          git tag
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm install
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build
+      - name: Build tarball and deb package
+        run: misc/release-scripts/release.sh
+      - name: Install deb package
+        run: sudo apt install ./build/release-*/*.deb
+      - name: Check backend running status
+        run: sudo systemctl status accel-web-manager
+      - name: Check if backend replies
+        run: curl -D - http://localhost:8123/stats/all
+      - name: Enable nginx configuration
+        run: |
+          sudo ln -s ../sites-available/accel-web-manager /etc/nginx/sites-enabled/
+          sudo systemctl restart nginx
+      - name: Check if nginx serves the frontend
+        run: curl -D - http://localhost:8018/
+      - name: Upload tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: tarball
+          path: build/release-*/*.txz
+          if-no-files-found: error
+      - name: Upload deb package
+        uses: actions/upload-artifact@v3
+        with:
+          name: deb package
+          path: build/release-*/*.deb
+          if-no-files-found: error
+
+  Build-on-MacOS:
+    runs-on: macos-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Repository info
+        run: |
+          git branch
+          git tag
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm install
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build
+      - name: Install dpkg
+        run: brew install dpkg
+      - name: Build tarball and deb package
+        run: misc/release-scripts/release.sh
+      - name: Install backend libraries
+        run: pip3 install gunicorn Flask Flask-Compress Flask-Cors
+      - name: Get short commit value
+        run: echo "RELEASE_SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Run backend using gunicorn
+        working-directory: ./build/release-${{ env.RELEASE_SHA_SHORT }}/accel-web-manager/backend
+        run: gunicorn -D -w 4 -b 127.0.0.1:8123 accel-web-manager:app
+      - name: Check if backend replies
+        run: curl -D - http://localhost:8123/stats/all
