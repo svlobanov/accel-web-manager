@@ -9,6 +9,7 @@ on:
 
 jobs:
   Build-on-Ubuntu:
+    #if: ${{ false }} # disable for now
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -48,18 +49,19 @@ jobs:
       - name: Upload deb package
         uses: actions/upload-artifact@v3
         with:
-          name: deb package
+          name: deb-package
           path: build/release-*/*.deb
           if-no-files-found: error
 
   Build-on-MacOS:
+    # if: ${{ false }} # disable for now
     runs-on: macos-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Repository info
+      - name: Display Repository info
         run: |
           git branch
           git tag
@@ -82,3 +84,49 @@ jobs:
         run: gunicorn -D -w 4 -b 127.0.0.1:8123 accel-web-manager:app
       - name: Check if backend replies
         run: curl -D - http://localhost:8123/stats/all
+
+  Install-Run:
+    needs: Build-on-Ubuntu
+    strategy:
+      matrix:
+        distro: ["debian:oldstable", "debian:stable", "debian:testing", "ubuntu:latest", "ubuntu:rolling"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display host distro name
+        run: cat /etc/issue
+      - name: Display host user
+        run: id
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Display Repository info
+        run: |
+          git branch
+          git tag
+      - name: Build ${{ matrix.distro }} container with systemd
+        run: docker build . -t with-systemd/${{ matrix.distro }} --build-arg SOURCE=${{ matrix.distro }} -f .github/workflows/Deb-Based-Systemd.Dockerfile
+      - name: Download deb package to install
+        uses: actions/download-artifact@v3
+        with:
+          name: deb-package
+      - name: Run built ${{ matrix.distro }} container
+        run: docker run -d --name test-cont -p 8018:8018 --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup -v $(pwd):/data --privileged with-systemd/${{ matrix.distro }}
+      - name: Wait until systemd is up
+        run: docker exec test-cont sh -c "while ! systemctl is-system-running --wait; do sleep 1; done"
+      - name: Display container distro name
+        run: docker exec test-cont cat /etc/issue
+      - name: Display files to install
+        run: docker exec test-cont sh -c "ls -laR /data/release-*"
+      - name: Enable start services after install
+        run: docker exec test-cont sh -c "printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d"
+      - name: Install deb package
+        run: docker exec test-cont sh -c "apt -y install /data/release-*/*.deb"
+      - name: Check backend running status
+        run: docker exec test-cont systemctl status accel-web-manager
+      - name: Enable nginx configuration
+        run: docker exec test-cont ln -s ../sites-available/accel-web-manager /etc/nginx/sites-enabled/
+      - name: Reload nginx
+        run: docker exec test-cont systemctl reload nginx
+      - name: Check if nginx replies
+        run: curl -u admin:accel -D - http://localhost:8018/
+      - name: Check if backend replies through nginx
+        run: curl -u admin:accel -D - http://localhost:8018/api/stats/all
