@@ -1,7 +1,7 @@
 {
   "name": "accel-web-manager",
   "homepage": ".",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "@inovua/reactdatagrid-community": "^4.21.0",

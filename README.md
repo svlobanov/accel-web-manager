@@ -40,8 +40,8 @@ You can install accel-web-manager directly on BRAS or any other server.
 
 Download package and install
 ```bash
-$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.2.1/accel-web-manager_0.2.1-1_all.deb
-$ sudo apt install ./accel-web-manager_0.2.1-1_all.deb
+$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.3.0/accel-web-manager_0.3.0-1_all.deb
+$ sudo apt install ./accel-web-manager_0.3.0-1_all.deb
 ```
 
 Check backend running status
@@ -70,7 +70,7 @@ Now follow http://YOUR_SERVER_IP_OR_HOSTNAME:8018/ (default creds: admin/accel i
 
 ### Upgrade guide (using .deb package)
 
-1. Download and install the new version using the command `sudo dpkg --force-confask -i accel-web-manager_0.2.1-1_all.deb`
+1. Download and install the new version using the command `sudo dpkg --force-confask -i accel-web-manager_0.3.0-1_all.deb`
 2. Check the diff between old and new settings files that dpkg asked about. If you answered Y, then an old file has '.dpkg-old' suffix. If you answered N, then a new file has '.dpkg-dist' suffix. You do not need to change '.dpkg-old' or '.dpkg-dist' files. Change only .py settings files
 3. Restart the backend (`sudo systemctl restart accel-web-manager`) if you changed config files on step 2
 4. Refresh Web-UI in your browser (ctrl/cmd+shift+r in chrome)
@@ -86,8 +86,8 @@ $ sudo apt install python3-flask python3-flask-compress python3-flask-cors pytho
 
 Download tarball and extract
 ```bash
-$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.2.1/accel-web-manager-v0.2.1.txz
-$ sudo tar -xf accel-web-manager-v0.2.1.txz -C /var/lib/
+$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.3.0/accel-web-manager-v0.3.0.txz
+$ sudo tar -xf accel-web-manager-v0.3.0.txz -C /var/lib/
 ```
 
 Create systemd service for backend and run
