@@ -1,9 +1,9 @@
 import SelectFilter from '@inovua/reactdatagrid-community/SelectFilter'
 import filesize from 'filesize'
-import { Duration } from 'luxon'
 
 import { sortIPv4 } from './sortIPv4'
 import { sortRate } from './sortRate'
+import { formatDuration } from './formatDuration'
 
 export const processColumnSettings = (columns) => {
     columns.forEach((column) => {
@@ -32,7 +32,7 @@ export const processColumnSettings = (columns) => {
                 })
                 break
             case 'Duration':
-                column['render'] = ({ value }) => Duration.fromMillis(value * 1000).toFormat('d.hh:mm:ss');
+                column['render'] = ({ value }) => formatDuration(value)
                 break
             default:
                 break

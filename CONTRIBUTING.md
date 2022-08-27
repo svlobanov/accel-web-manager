@@ -56,6 +56,9 @@ This project is possible thanks to all these open source languages, libraries, a
 | [Axios](https://axios-http.com/)                      | Frontend http client                       |
 | [Luxon](https://moment.github.io/luxon/)              | Frontend time formatter library            |
 | [Filesize](https://filesizejs.com/)                   | Frontend unit converter library            |
+| [Filesize](https://filesizejs.com/)                   | Frontend unit converter library            |
+| [RSuite](https://rsuitejs.com/)                       | Frontend components (buttons, etc)         |
+| [Recharts](https://recharts.org/)                     | Frontend chart component                   |
 | [Flask](https://flask.palletsprojects.com/)           | Backend Python framework                   |
 | [Gunicorn](https://gunicorn.org/)                     | Web server for running Python applications |
 | [Nginx](https://nginx.org/)                           | Web server for auxillary tasks             |

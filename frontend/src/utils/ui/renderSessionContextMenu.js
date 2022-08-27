@@ -1,13 +1,17 @@
 import { toast } from 'react-toastify';
 import { dropSession } from '../dropSession';
 
-export const renderSessionContextMenu = (privileges, loadSessions, menuProps, { rowProps, cellProps }) => {
+export const renderSessionContextMenu = (privileges, loadSessions, trafficModal, setTrafficModal, menuProps, { rowProps, cellProps }) => {
   const sessionName = (ses) => {
     return [ses['ke'], ses['if'], ses['us']].join(' ')
   }
 
   const terminateLabel = (ses, mode) => {
     return "Terminate " + mode + " (" + ses['if'] + ", " + ses['us'] + ") by sid " + ses['ke']
+  }
+
+  const trafficLabel = (ses) => {
+    return "Show Traffic for (" + ses['if'] + ", " + ses['us'] + ") by sid " + ses['ke']
   }
 
   const terminate = async (ses, mode) => {
@@ -26,10 +30,25 @@ export const renderSessionContextMenu = (privileges, loadSessions, menuProps, { 
     menuProps.onDismiss();
   }
 
+  const openTrafficModal = (ses) => {
+    setTrafficModal({ ...trafficModal, open: true, ses: ses })
+    menuProps.onDismiss();
+  }
+
   const ses = rowProps.data
+  const menuItems = []
+
+  if (privileges['showSessions'] === true) {
+    menuItems.push(
+      {
+        label: trafficLabel(ses),
+        onClick: () => { openTrafficModal(ses) }
+      }
+    )
+  }
+
   if (privileges['dropSession'] === true) {
-    menuProps.autoDismiss = false
-    menuProps.items = [
+    menuItems.push(
       {
         label: terminateLabel(ses, 'soft'),
         onClick: async () => { terminate(ses, 'soft') }
@@ -38,6 +57,11 @@ export const renderSessionContextMenu = (privileges, loadSessions, menuProps, { 
         label: terminateLabel(ses, 'hard'),
         onClick: async () => { terminate(ses, 'hard') }
       }
-    ]
+    )
+  }
+
+  if (menuItems.length > 0) {
+    menuProps.autoDismiss = false
+    menuProps.items = menuItems
   }
 }

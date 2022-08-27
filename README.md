@@ -4,6 +4,7 @@
 
 - **View Sessions** (using 'accel-cmd show sessions')
 - **View Accel-PPP statistics** (using 'accel-cmd show stat')
+- **Real-Time Traffic Graphs** (using 'accel-cmd show sessions')
 - **Drop session** (soft and hard)
 - **Find sessions** (sort, per-column filters, multiple filters)
 - **Find duplicate session** (by User-Name, IPv4, Calling-Sid, Called-Sid)
@@ -20,6 +21,7 @@
 ### Demo Limitations
 - This demo uses static files so session uptime and other values will not be updated
 - Session deletion does not work in the demo due to github pages do not support DELETE http method, but you can check how it should work (use context menu on session)
+- Real-time traffic graphs use random data (including uptime value). It does not send requests to backend (generated in user browser), but it is enough to evaluate this feature (use context menu on session). Data generator produces realistic values
 
 ## Purposes / Use Cases
 - Provide simple web interface for technical support staff (Internet/VPN service providers)

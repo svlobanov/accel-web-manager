@@ -20,8 +20,8 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.0.8",
-    "rsuite": "^5.16.6",
-    "web-vitals": "^2.1.4"
+    "recharts": "^2.1.13",
+    "rsuite": "^5.16.6"
   },
   "scripts": {
     "start": "react-app-rewired start",

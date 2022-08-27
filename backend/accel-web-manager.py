@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+from dataclasses import asdict
 from subprocess import Popen, PIPE
 import sys
 import itertools
 from threading import Thread
+import time
 
 # from time import sleep  # debug only
 
@@ -222,3 +224,51 @@ def drop_session(bras, sid, mode):
         return jsonify({"status": "ok"})
     else:
         return jsonify({"status": out + " " + err})
+
+
+# Rest controller for getting session traffic data
+@app.route("/traffic/bras/<bras>/sid/<sid>")
+def get_traffic(bras, sid):
+    if privileges["showSessions"] != True:
+        abort(403)
+    timestamp = time.time() # will be returned in normal case
+    try:
+        (code, out, err) = exec_command(
+            bras_options[bras],
+            [
+                "show sessions match sid "
+                + sid
+                + " uptime-raw,rx-bytes-raw,tx-bytes-raw,rx-pkts,tx-pkts"
+            ],
+        )
+    except Exception as e:
+        return jsonify({"status": str(e), "traffic": {}})
+
+    if code == 0 and err == "":  # normal case
+        lines = out.splitlines()
+        result = {}
+        if len(lines) == 3: # main loop (one session found)
+            line = lines[2]
+            vals = line.split('|')
+            if len(vals) == 5: # as requested by show sessions ...
+                result["status"] = "ok"
+                result["traffic"] = {'ts': timestamp}
+                col_names = ['up', 'rb', 'tb', 'rp', 'tp']
+                for i in range(5):
+                    result["traffic"][col_names[i]] = int(vals[i].strip())  
+            else:
+                result["status"] = "error while parsing result (!=5 columns)"
+                result["traffic"] = {}              
+        elif len(lines) == 2:
+            result["status"] = "SESSION_NOT_FOUND"
+            result["traffic"] = {}
+        elif len(lines) < 2:
+            result["status"] = "header not found (< 2 lines)"
+            result["traffic"] = {}
+        else: # more than 3 lines in reply
+            result["status"] = "found more than one session"
+            result["traffic"] = {}
+
+        return jsonify({"status": result["status"], "traffic": result["traffic"]})
+    else:
+        return jsonify({"status": out + " " + err, "traffic": {}})

@@ -1,0 +1,23 @@
+.Menu {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    margin-bottom: 12px;
+}
+
+.MenuControls {
+    text-align: left;
+}
+
+.MenuInfo {
+    text-align: right;
+    margin-right: 4px;
+}
+
+.IssueLabel {
+    color: red;
+    white-space: nowrap;
+}
+
+.IssueLabel {
+    white-space: nowrap;
+}

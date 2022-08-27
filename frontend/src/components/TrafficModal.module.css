@@ -1,0 +1,9 @@
+.Body {
+    height: 100vh;
+}
+
+.Content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
