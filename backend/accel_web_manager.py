@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from dataclasses import asdict
+from packaging import version
+
 from subprocess import Popen, PIPE
 import sys
 import itertools
@@ -9,7 +10,8 @@ import time
 
 # from time import sleep  # debug only
 
-from flask import Flask, make_response, jsonify, request, abort
+from flask import __version__ as flask_version
+from flask import Flask, jsonify, abort
 from flask_cors import CORS
 from flask_compress import Compress
 
@@ -25,7 +27,11 @@ if sys.hexversion < 0x03070000:
     sys.exit("Python 3.7 or newer is required")  # dict must be ordered
 
 app = Flask(__name__)
-app.config["JSON_SORT_KEYS"] = False
+if version.parse(flask_version) < version.parse("2.2.0"):
+    app.config["JSON_SORT_KEYS"] = False
+else:
+    app.json.sort_keys = False
+
 # brotli compression requires flask-compress >= 1.5.0
 app.config["COMPRESS_ALGORITHM"] = "br"
 CORS(app)
@@ -231,7 +237,7 @@ def drop_session(bras, sid, mode):
 def get_traffic(bras, sid):
     if privileges["showSessions"] != True:
         abort(403)
-    timestamp = time.time() # will be returned in normal case
+    timestamp = time.time()  # will be returned in normal case
     try:
         (code, out, err) = exec_command(
             bras_options[bras],
@@ -247,25 +253,25 @@ def get_traffic(bras, sid):
     if code == 0 and err == "":  # normal case
         lines = out.splitlines()
         result = {}
-        if len(lines) == 3: # main loop (one session found)
+        if len(lines) == 3:  # main loop (one session found)
             line = lines[2]
-            vals = line.split('|')
-            if len(vals) == 5: # as requested by show sessions ...
+            vals = line.split("|")
+            if len(vals) == 5:  # as requested by show sessions ...
                 result["status"] = "ok"
-                result["traffic"] = {'ts': timestamp}
-                col_names = ['up', 'rb', 'tb', 'rp', 'tp']
+                result["traffic"] = {"ts": timestamp}
+                col_names = ["up", "rb", "tb", "rp", "tp"]
                 for i in range(5):
-                    result["traffic"][col_names[i]] = int(vals[i].strip())  
+                    result["traffic"][col_names[i]] = int(vals[i].strip())
             else:
                 result["status"] = "error while parsing result (!=5 columns)"
-                result["traffic"] = {}              
+                result["traffic"] = {}
         elif len(lines) == 2:
             result["status"] = "SESSION_NOT_FOUND"
             result["traffic"] = {}
         elif len(lines) < 2:
             result["status"] = "header not found (< 2 lines)"
             result["traffic"] = {}
-        else: # more than 3 lines in reply
+        else:  # more than 3 lines in reply
             result["status"] = "found more than one session"
             result["traffic"] = {}
 

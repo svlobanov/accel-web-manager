@@ -81,7 +81,7 @@ You can install accel-web-manager directly on BRAS or any other server.
 Install dependencies.
 
 ```bash
-$ sudo apt install python3-flask python3-flask-compress python3-flask-cors python3-gunicorn gunicorn3 nginx apache2-utils 
+$ sudo apt install python3-packaging python3-flask python3-flask-compress python3-flask-cors python3-gunicorn gunicorn3 nginx apache2-utils 
 ```
 
 Download tarball and extract
@@ -183,7 +183,7 @@ Just edit .py files in `backend` dir
 Start backend in dev mode
 ```bash
 cd backend
-FLASK_APP=accel-web-manager.py flask run --host 127.0.0.1
+FLASK_APP=accel_web_manager.py flask run --host 127.0.0.1
 ```
 Use `--host 0.0.0.0` if you want to access the backend from another host
 
