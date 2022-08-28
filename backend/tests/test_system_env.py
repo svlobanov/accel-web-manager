@@ -1,5 +1,6 @@
 from unittest import mock
 import sys
+import flask
 
 from accel_web_manager import create_app
 import accel_web_manager
@@ -34,11 +35,18 @@ def test_flask_version_210():
     assert app_flask_210.config["JSON_SORT_KEYS"] == False
 
 
-@mock.patch.object(accel_web_manager, "flask_version", "2.2.0")
-def test_flask_version_220():
-    app_flask_220 = create_app()
+@mock.patch.object(accel_web_manager, "flask_version", "2.2.2")
+def test_flask_version_222():
     print("accel_web_manager.flask_version=" + accel_web_manager.flask_version)
-    print("app_flask_220.json.sort_keys" + str(app_flask_220.json.sort_keys))
+    print("real flask version(flask.__version__)=" + flask.__version__)
 
-    # test that app uses json.sort_keys if flask version is 2.2.0
-    assert app_flask_220.json.sort_keys == False
+    attribute_exception = False
+    try:
+        app_flask_222 = create_app()
+        print("app_flask_222.json.sort_keys=" + str(app_flask_222.json.sort_keys))
+    except AttributeError as err:
+        attribute_exception = True  # it is ok if real flask version < 2.2.0
+        print("attribute exception=" + str(err))
+
+    # test that app uses json.sort_keys if flask version is 2.2.2
+    assert attribute_exception == True or app_flask_222.json.sort_keys == False
