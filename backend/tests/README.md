@@ -5,11 +5,11 @@
 Install pytest using package manager or pip
 
 ```bash
-$ sudo apt install python3-pytest
+$ sudo apt install python3-pytest python3-pytest-cov
 ```
 or
 ```bash
-$ pip3 install pytest
+$ pip3 install pytest pytest-cov
 ```
 
 ## Run tests
@@ -17,5 +17,5 @@ $ pip3 install pytest
 Run from `backend/` dir, not from current dir
 
 ```bash
-user@host backend % python3 -m pytest
+user@host backend % python3 -m pytest --verbose --cov-report=term-missing --cov=accel_web_manager
 ```

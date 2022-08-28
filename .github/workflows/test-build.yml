@@ -19,13 +19,13 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Install backend libraries and pytest using pip
-        run: pip3 install packaging Flask Flask-Compress Flask-Cors pytest
+        run: pip3 install packaging Flask Flask-Compress Flask-Cors pytest pytest-cov
       - name: Run backend tests (warnings are ok)
         working-directory: ./backend
-        run: python3 -m pytest
+        run: python3 -m pytest --verbose --cov-report=term-missing --cov=accel_web_manager
       - name: Run backend tests (treat warnings as errors)
         working-directory: ./backend
-        run: python3 -m pytest --cache-clear -Werror
+        run: python3 -m pytest --verbose --cache-clear -Werror --cov-report=term-missing --cov=accel_web_manager
 
   Run-BE-Tests-On-Distros:
     #if: ${{ false }} # disable for now
@@ -51,13 +51,13 @@ jobs:
       - name: Prepare package manager
         run: apt update
       - name: Install backend libraries and pytest from distro repository
-        run: apt -y install python3 python3-packaging python3-pytest python3-flask python3-flask-compress python3-flask-cors
+        run: apt -y install python3 python3-packaging python3-pytest python3-pytest-cov python3-flask python3-flask-compress python3-flask-cors
       - name: Run backend tests (warnings are ok)
         working-directory: ./backend
-        run: python3 -m pytest
+        run: python3 -m pytest --verbose --cov-report=term-missing --cov=accel_web_manager
       - name: Run backend tests (treat warnings as errors)
         working-directory: ./backend
-        run: python3 -m pytest --cache-clear -Werror
+        run: python3 -m pytest --verbose --cache-clear -Werror --cov-report=term-missing --cov=accel_web_manager
 
   Build-on-Ubuntu:
     #if: ${{ false }} # disable for now
