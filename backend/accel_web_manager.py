@@ -11,7 +11,7 @@ import time
 # from time import sleep  # debug only
 
 from flask import __version__ as flask_version
-from flask import Flask, jsonify, abort
+from flask import Flask, Blueprint, jsonify, abort
 from flask_cors import CORS
 from flask_compress import Compress
 
@@ -23,19 +23,7 @@ from visual_settings import grid_settings, toast_settings
 from role_settings import privileges
 from duplicate_settings import duplicate_columns
 
-if sys.hexversion < 0x03070000:
-    sys.exit("Python 3.7 or newer is required")  # dict must be ordered
-
-app = Flask(__name__)
-if version.parse(flask_version) < version.parse("2.2.0"):
-    app.config["JSON_SORT_KEYS"] = False
-else:
-    app.json.sort_keys = False
-
-# brotli compression requires flask-compress >= 1.5.0
-app.config["COMPRESS_ALGORITHM"] = "br"
-CORS(app)
-Compress(app)
+main = Blueprint("main", __name__)
 
 # Execute the command and return exit_code, stdout and stdin
 def exec_command(bras_options, command):
@@ -121,7 +109,7 @@ def get_sessions_multiple(bras_options):
 
 
 # Rest controller for getting sessions
-@app.route("/sessions/<bras>")
+@main.route("/sessions/<bras>")
 def sessions(bras):
     if privileges["showSessions"] != True:
         abort(403)
@@ -135,7 +123,7 @@ def sessions(bras):
 
 
 # Rest controller for finding duplicates sessions
-@app.route("/duplicates/<bras>/<key>")
+@main.route("/duplicates/<bras>/<key>")
 def sessions_duplicates(bras, key):
     if privileges["showSessions"] != True:
         abort(403)
@@ -187,7 +175,7 @@ def get_stats_multiple(bras_options):
 
 
 # Rest controller for getting stats
-@app.route("/stats/<bras>")
+@main.route("/stats/<bras>")
 def stats(bras):
     if privileges["showStats"] != True:
         abort(403)
@@ -200,7 +188,7 @@ def stats(bras):
     return jsonify({"issues": issues, "stats": stats})
 
 
-@app.route("/settings")
+@main.route("/settings")
 def columns():
     return jsonify(
         {
@@ -215,7 +203,7 @@ def columns():
 
 
 # Rest controller for session dropping
-@app.route("/session/bras/<bras>/sid/<sid>/mode/<mode>", methods=["DELETE"])
+@main.route("/session/bras/<bras>/sid/<sid>/mode/<mode>", methods=["DELETE"])
 def drop_session(bras, sid, mode):
     if privileges["dropSession"] != True:
         abort(403)
@@ -233,7 +221,7 @@ def drop_session(bras, sid, mode):
 
 
 # Rest controller for getting session traffic data
-@app.route("/traffic/bras/<bras>/sid/<sid>")
+@main.route("/traffic/bras/<bras>/sid/<sid>")
 def get_traffic(bras, sid):
     if privileges["showSessions"] != True:
         abort(403)
@@ -278,3 +266,25 @@ def get_traffic(bras, sid):
         return jsonify({"status": result["status"], "traffic": result["traffic"]})
     else:
         return jsonify({"status": out + " " + err, "traffic": {}})
+
+
+def create_app():
+    if sys.hexversion < 0x03070000:
+        print("Python 3.7 or newer is required")  # dict must be ordered
+        return None
+
+    app = Flask(__name__)
+    if version.parse(flask_version) < version.parse("2.2.0"):
+        app.config["JSON_SORT_KEYS"] = False
+    else:
+        app.json.sort_keys = False
+
+    # brotli compression requires flask-compress >= 1.5.0
+    app.config["COMPRESS_ALGORITHM"] = "br"
+    CORS(app)
+    Compress(app)
+    app.register_blueprint(main)
+    return app
+
+
+app = create_app()

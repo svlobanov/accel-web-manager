@@ -1,7 +1,10 @@
 import pytest
-from accel_web_manager import app
-
+from accel_web_manager import create_app
 
 @pytest.fixture()
-def client():
+def app():
+    yield create_app()
+
+@pytest.fixture()
+def client(app):
     return app.test_client()
