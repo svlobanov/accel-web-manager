@@ -9,3 +9,6 @@ venv.bak/
 
 # Byte-compiled
 __pycache__/
+
+# pytest
+.pytest_cache
