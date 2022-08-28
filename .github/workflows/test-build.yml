@@ -59,9 +59,51 @@ jobs:
         working-directory: ./backend
         run: python3 -m pytest --verbose --cache-clear -Werror --cov-report=term-missing --cov=accel_web_manager
 
+  Run-BE-Tests-On-RH-Pip:
+    #if: ${{ false }} # disable for now
+    strategy:
+      fail-fast: false
+      matrix:
+        distro:
+          ["oraclelinux:9", "oraclelinux:8", "fedora:latest", "fedora:rawhide"]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.distro }}
+    steps:
+      - name: Display container distro name
+        run: |
+          cat /etc/redhat-release
+          cat /etc/issue
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Upgrade packages
+        run: dnf -y upgrade
+      - name: Install python3 and pip3 (version is not specified)
+        if: ${{ matrix.distro != 'oraclelinux:8' }}
+        run: dnf -y install python3 python3-pip
+      - name: Install python3 and pip3 (force 3.9)
+        if: ${{ matrix.distro == 'oraclelinux:8' }}
+        run: dnf -y install python39 python39-pip
+      - name: Install python3 build tools (gcc, python headers)
+        if: ${{ matrix.distro == 'fedora:rawhide' }}
+        run: dnf -y install python3-devel gcc gcc-c++
+      - name: Install backend libraries and pytest using pip
+        run: pip3 install packaging Flask Flask-Compress Flask-Cors pytest pytest-cov
+      - name: Run backend tests (warnings are ok)
+        working-directory: ./backend
+        run: python3 -m pytest --verbose --cov-report=term-missing --cov=accel_web_manager
+      - name: Run backend tests (treat warnings as errors)
+        working-directory: ./backend
+        run: python3 -m pytest --verbose --cache-clear -Werror --cov-report=term-missing --cov=accel_web_manager
+
   Build-on-Ubuntu:
     #if: ${{ false }} # disable for now
-    needs: [Run-BE-Tests-On-Distros, Run-BE-Tests-Pip-Versions]
+    needs:
+      [
+        Run-BE-Tests-On-Distros,
+        Run-BE-Tests-Pip-Versions,
+        Run-BE-Tests-On-RH-Pip,
+      ]
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
