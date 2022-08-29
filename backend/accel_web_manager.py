@@ -50,7 +50,7 @@ def get_sessions(bras, bras_options, result):
         lines = output.splitlines()
 
         if len(lines) < 2:
-            result["status"] = "header not found (< 2 lines)"
+            result["status"] = "header not found (< 2 lines) (" + output.strip() + ")"
             result["sessions"] = []
             return
 
@@ -257,7 +257,7 @@ def get_traffic(bras, sid):
             result["status"] = "SESSION_NOT_FOUND"
             result["traffic"] = {}
         elif len(lines) < 2:
-            result["status"] = "header not found (< 2 lines)"
+            result["status"] = "header not found (< 2 lines) (" + out.strip() + ")"
             result["traffic"] = {}
         else:  # more than 3 lines in reply
             result["status"] = "found more than one session"
