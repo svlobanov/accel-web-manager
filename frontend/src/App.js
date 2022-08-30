@@ -87,11 +87,11 @@ const App = () => {
     setDisableActions(false)
   }
 
-  const loadStats = async () => {
+  const loadStats = async (mode) => {
     toast.clearWaitingQueue()
     toast.dismiss()
     setDisableActions(true)
-    const stats = await getStats(selectedBras === null ? 'all' : selectedBras)
+    const stats = await getStats(selectedBras === null ? 'all' : selectedBras, mode)
     if (typeof stats === 'string') {
       toast.error('Error loading stats at ' + getTime() + ': ' + stats)
     } else {

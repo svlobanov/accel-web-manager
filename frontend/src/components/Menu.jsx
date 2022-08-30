@@ -2,18 +2,12 @@ import React from 'react';
 import BrasList from './BrasList';
 import InfoBox from './InfoBox';
 import SessionsButton from './SessionsButton';
-
-import { Button } from 'rsuite';
+import StatsButton from './StatsButton';
 
 import classes from './Menu.module.css'
 
 const Menu = ({ privileges, selectedBras, setSelectedBras, brasList, disableActions, sessionInfoReady,
     loadStats, loadSessions, stats, sessions, duplicateKeys }) => {
-
-    const onGetStats = async () => {
-        loadStats()
-        //setWhatToShow('stats')
-    }
 
     return (
         <div className={classes.Menu}>
@@ -25,7 +19,7 @@ const Menu = ({ privileges, selectedBras, setSelectedBras, brasList, disableActi
                 }
                 &nbsp;
                 {privileges['showStats'] === true ?
-                    <Button size='xs' onClick={onGetStats} disabled={disableActions}>Get Stats</Button>
+                    <StatsButton loadStats={loadStats} disabled={disableActions}>Get Stats</StatsButton>
                     : ''
                 }
             </div>

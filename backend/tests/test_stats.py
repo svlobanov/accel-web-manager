@@ -9,14 +9,14 @@ def mock_accel_cmd():
 
 @mock.patch.dict("role_settings.privileges", {"showStats": True})
 def test_stats_reply_allowed(client):
-    response = client.get("/stats/all")
+    response = client.get("/stats/all/general")
     # test that get /stats/all is ok (200) with showStats privilege
     assert response.status_code == 200
 
 
 @mock.patch.dict("role_settings.privileges", {"showStats": False})
 def test_stats_reply_denied(client):
-    response = client.get("/stats/all")
+    response = client.get("/stats/all/pppoe")
     # test that get /stats/all fails (403) without showStats privilege
     assert response.status_code == 403
 
@@ -32,8 +32,8 @@ def test_stats_reply_denied(client):
     clear=True,
 )
 def test_stats_reply_stats_custom_bras_config(client):
-    response = client.get("/stats/all")
-    print("/stats/all=" + str(response.data))
+    response = client.get("/stats/all/general")
+    print("/stats/all/general=" + str(response.data))
 
     # test that get /stats/all returns ok (200) with custom bras configuration
     assert response.status_code == 200
@@ -54,8 +54,8 @@ def test_stats_reply_stats_custom_bras_config(client):
     # test that reply has an issue for br-test3
     assert len(reply["issues"]["br-test3"]) > 0
 
-    response2 = client.get("/stats/br-test1")
-    print("/stats/br-test1=" + str(response.data))
+    response2 = client.get("/stats/br-test1/pppoe")
+    print("/stats/br-test1/pppoe=" + str(response.data))
 
     # test that get /stats/br-test1 returns ok (200) with custom bras configuration (existent bras)
     assert response2.status_code == 200

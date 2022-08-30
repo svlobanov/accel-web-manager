@@ -138,9 +138,10 @@ def sessions_duplicates(bras, key):
 
 
 # Send 'show stat' command to the bras and parse the output
-def get_stats(bras, bras_options, result):
+def get_stats(bras, bras_options, result, mode):
+    command = {"general": "show stat", "pppoe": "pppoe interface show"}
     try:
-        (exit_code, output, err) = exec_command(bras_options, ["show stat"])
+        (exit_code, output, err) = exec_command(bras_options, [command[mode]])
     except Exception as e:
         result["status"] = str(e)
         result["stats"] = str(e)
@@ -154,13 +155,13 @@ def get_stats(bras, bras_options, result):
 
 
 # Get session from all selected bras using multiple threads
-def get_stats_multiple(bras_options):
+def get_stats_multiple(bras_options, mode):
     data = {}  # this dict is used to collect data from all bras's
 
     for bras, options in bras_options.items():
         data[bras] = {}
         data[bras]["thread"] = Thread(
-            target=get_stats, args=(bras, options, data[bras])
+            target=get_stats, args=(bras, options, data[bras], mode)
         )
         data[bras]["thread"].start()
 
@@ -174,9 +175,9 @@ def get_stats_multiple(bras_options):
     return (issues, {bras: data[bras]["stats"] for bras in data})
 
 
-# Rest controller for getting stats
-@main.route("/stats/<bras>")
-def stats(bras):
+# Rest controller for getting stats (general or pppoe)
+@main.route("/stats/<bras>/<mode>")
+def stats(bras, mode):
     if privileges["showStats"] != True:
         abort(403)
 
@@ -184,7 +185,7 @@ def stats(bras):
     if bras != "all":  # if there is a filter by bras
         filt_bras_options = {bras: bras_options[bras]}
 
-    (issues, stats) = get_stats_multiple(filt_bras_options)
+    (issues, stats) = get_stats_multiple(filt_bras_options, mode)
     return jsonify({"issues": issues, "stats": stats})
 
 
