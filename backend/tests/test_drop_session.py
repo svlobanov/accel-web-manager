@@ -3,14 +3,6 @@ import json
 import os
 
 
-def mock_accel_cmd():  # with stderr
-    return os.path.join(os.path.dirname(__file__), "mock_accel_cmd.py")
-
-
-def mock_accel_cmd2():  # without stderr
-    return os.path.join(os.path.dirname(__file__), "mock_accel_cmd2.py")
-
-
 def mock_accel_cmd3():  # without stderr
     return os.path.join(os.path.dirname(__file__), "mock_accel_cmd3.py")
 

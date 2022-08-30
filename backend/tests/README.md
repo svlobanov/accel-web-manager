@@ -17,5 +17,5 @@ $ pip3 install pytest pytest-cov
 Run from `backend/` dir, not from current dir
 
 ```bash
-user@host backend % python3 -m pytest --verbose --cov-report=term-missing --cov=accel_web_manager
+user@host backend % python3 -m pytest -Werror --verbose --cov
 ```

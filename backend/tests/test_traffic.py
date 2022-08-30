@@ -61,16 +61,11 @@ def test_traffic_session_not_found(client):
     assert reply["status"] == "SESSION_NOT_FOUND"
 
 
-header_not_found_mock = (
-    " uptime-raw | rx-bytes-raw | tx-bytes-raw |  rx-pkts  |  tx-pkts  "
-)
-
-
 @mock.patch.dict("role_settings.privileges", {"showSessions": True})
 @mock.patch.dict(
     "bras_settings.bras_options",
     {
-        "br-test1": ["python3", mock_accel_cmd2(), "0", header_not_found_mock],
+        "br-test1": ["python3", mock_accel_cmd2(), "0", "some_useful_info"],
     },
     clear=True,
 )
@@ -84,6 +79,9 @@ def test_traffic_header_not_found(client):
         and reply["status"] != "ok"
         and bool(reply["traffic"]) == False
     )
+    # test that status message contains info provided in accel-cmd output
+    # this test is related to issue#1 (https://github.com/svlobanov/accel-web-manager/issues/1)
+    assert "some_useful_info" in reply["status"]
 
 
 more_than_one_session_mock = (

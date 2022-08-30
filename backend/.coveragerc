@@ -1,0 +1,12 @@
+# next line is disabling pylance checks
+# type: ignore
+
+[run]
+branch = True
+source = .
+omit = tests/*
+    *_settings.py
+
+[report]
+show_missing = True
+precision = 2
