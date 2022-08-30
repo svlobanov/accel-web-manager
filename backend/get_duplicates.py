@@ -8,10 +8,10 @@ def need_skip(skip_settings, val):
     if skip_settings.get("skip_empty", False):
         if val == "":
             return True
-        else:
-            return False
-    if skip_settings.get("skip_private_ipv4", False):
-        return IPv4Address(val).is_private
+    if skip_settings.get("skip_private_ip", False):
+        if IPv4Address(val).is_global == False:
+            return True
+    return False
 
 
 def get_duplicates(sessions, key):
