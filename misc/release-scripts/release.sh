@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Run this script from root folder
 VERSION=`git rev-parse --short HEAD`
 DIR0="build/release-${VERSION}"
@@ -36,9 +38,6 @@ TAR=tar
 gtar --version 2>/dev/null 1>/dev/null && TAR=gtar # workaround for macos
 $TAR --owner root:0 --group root:0 -Jcf accel-web-manager-$VERSION.txz accel-web-manager/ || \
     echo "ERROR: Please install gnu tar (gtar)"
-#cd ../..
-#echo 'pwd'
-pwd
 
 # Build deb
 UPSTREAM_VERSION=`git describe --tags --long | sed 's/^v//' | sed 's/-/+/' | sed 's/-/~/'`

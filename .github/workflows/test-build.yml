@@ -114,12 +114,6 @@ jobs:
         run: |
           git branch
           git tag
-      - name: Install Frontend Dependencies
-        working-directory: ./frontend
-        run: npm install
-      - name: Build Frontend
-        working-directory: ./frontend
-        run: npm run build
       - name: Build tarball and deb package
         run: misc/release-scripts/release.sh
       - name: Install deb package
@@ -159,12 +153,6 @@ jobs:
         run: |
           git branch
           git tag
-      - name: Install Frontend Dependencies
-        working-directory: ./frontend
-        run: npm install
-      - name: Build Frontend
-        working-directory: ./frontend
-        run: npm run build
       - name: Install dpkg
         run: brew install dpkg
       - name: Build tarball and deb package
