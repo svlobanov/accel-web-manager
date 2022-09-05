@@ -8,6 +8,7 @@
 - **Drop session** (soft and hard)
 - **Find sessions** (sort, per-column filters, multiple filters)
 - **Find duplicate session** (by User-Name, IPv4, Calling-Sid, Called-Sid)
+- **View PPPoE interface statistics** (using 'accel-cmd pppoe interface show')
 - **Multiple BRAS** (one view for multiple BRAS)
 - **Customizable session viewer** (column settings, default filter logic)
 - **Exception handling** (System continues to work (show what it can) and notifies user if some BRAS are down)
@@ -33,15 +34,15 @@ In general, installation is easy and has minimal dependencies. All dependecies c
 
 ### Requirements
 - Python >= 3.7 for backend
-- Debian Linux (>= 10 is recommended). It easy to adapt for another distros
+- Debian Linux (>= 10) or Ubuntu Linux (>= 20.04). It easy to adapt for another distros
 
 ### Installation guide (using .deb package)
 You can install accel-web-manager directly on BRAS or any other server.
 
 Download package and install
 ```bash
-$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.3.0/accel-web-manager_0.3.0-1_all.deb
-$ sudo apt install ./accel-web-manager_0.3.0-1_all.deb
+$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.4.0/accel-web-manager_0.4.0-1_all.deb
+$ sudo apt install ./accel-web-manager_0.4.0-1_all.deb
 ```
 
 Check backend running status
@@ -70,7 +71,7 @@ Now follow http://YOUR_SERVER_IP_OR_HOSTNAME:8018/ (default creds: admin/accel i
 
 ### Upgrade guide (using .deb package)
 
-1. Download and install the new version using the command `sudo dpkg --force-confask -i accel-web-manager_0.3.0-1_all.deb`
+1. Download and install the new version using the command `sudo dpkg --force-confask -i accel-web-manager_0.4.0-1_all.deb`
 2. Check the diff between old and new settings files that dpkg asked about. If you answered Y, then an old file has '.dpkg-old' suffix. If you answered N, then a new file has '.dpkg-dist' suffix. You do not need to change '.dpkg-old' or '.dpkg-dist' files. Change only .py settings files
 3. Restart the backend (`sudo systemctl restart accel-web-manager`) if you changed config files on step 2
 4. Refresh Web-UI in your browser (ctrl/cmd+shift+r in chrome)
@@ -86,8 +87,8 @@ $ sudo apt install python3-packaging python3-flask python3-flask-compress python
 
 Download tarball and extract
 ```bash
-$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.3.0/accel-web-manager-v0.3.0.txz
-$ sudo tar -xf accel-web-manager-v0.3.0.txz -C /var/lib/
+$ wget https://github.com/svlobanov/accel-web-manager/releases/download/v0.4.0/accel-web-manager-v0.4.0.txz
+$ sudo tar -xf accel-web-manager-v0.4.0.txz -C /var/lib/
 ```
 
 Create systemd service for backend and run
