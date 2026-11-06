@@ -1,7 +1,13 @@
 .idea/
 .vscode/
+.codex/
 
 .DS_Store
 build/
 /frontend/public/demo-logs.local.json
 .playwright-mcp/
+
+# Local development docs — only README files are versioned
+*.md
+!README.md
+!**/README.md

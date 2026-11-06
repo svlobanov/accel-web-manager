@@ -6,5 +6,5 @@ hostname = platform.node()
 
 bras_options = {
     f"{hostname}": ["accel-cmd", "-Hlocalhost", "-p2001"],
-    # "br2": ["accel-cmd", "-H127.0.0.2", "-p2001"],
+    #"br2": ["accel-cmd", "-H127.0.0.1", "-p2001"],
 }
