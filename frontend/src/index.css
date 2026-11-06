@@ -7,11 +7,70 @@
   themes: light --default, synthwave;
 }
 
+/*
+ * Accel design tokens.
+ * Font stacks are kept local (no webfont download) because the manager runs
+ * on self-hosted appliances that may have no outbound internet access.
+ */
+:root {
+  --awm-font-sans: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  --awm-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root[data-theme='light'] {
+  --awm-bg: #f1f5f9;
+  --awm-surface: #ffffff;
+  --awm-soft: #f1f5f9;
+  --awm-border: #cbd5e1;
+  --awm-text: #0f172a;
+  --awm-muted: #475569;
+  --awm-primary: #2563eb;
+  --awm-on-primary: #ffffff;
+  --awm-secondary: #0284c7;
+  --awm-tint: #eff6ff;
+  --awm-success: #15803d;
+  --awm-success-bg: #f0fdf4;
+  --awm-warning: #b45309;
+  --awm-warning-bg: #fffbeb;
+  --awm-error: #dc2626;
+  --awm-error-bg: #fef2f2;
+  --awm-chart-text: #ea580c;
+}
+
+/* Give white surfaces a clear edge against the light page background. */
+:root[data-theme='light'] .MetricCard,
+:root[data-theme='light'] .Grid,
+:root[data-theme='light'] .rs-picker-toggle,
+:root[data-theme='light'] .rs-btn:not(.rs-btn-primary),
+:root[data-theme='light'] .LogsAction {
+  box-shadow: 0 1px 3px rgb(15 23 42 / 10%);
+}
+
+:root[data-theme='synthwave'] {
+  --awm-bg: #080d0a;
+  --awm-surface: #101713;
+  --awm-soft: #18221c;
+  --awm-border: #29372e;
+  --awm-text: #e6f0e9;
+  --awm-muted: #a8c4ae;
+  --awm-primary: #22c55e;
+  --awm-on-primary: #07110a;
+  --awm-secondary: #22d3ee;
+  --awm-tint: #173b2a;
+  --awm-success: #4ade80;
+  --awm-success-bg: #163a25;
+  --awm-warning: #fbbf24;
+  --awm-warning-bg: #382d17;
+  --awm-error: #fb7185;
+  --awm-error-bg: #3b2023;
+  --awm-chart-text: #4ade80;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--awm-font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+html, body, #root { width: 100%; min-width: 360px; height: 100%; }

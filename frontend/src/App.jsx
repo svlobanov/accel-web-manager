@@ -25,7 +25,6 @@ const App = () => {
   const [columns, setColumns] = useState([]); // session columns on grid received from backend
   const [sessions, setSessions] = useState(false); // sessions received from backend
   const [stats, setStats] = useState(false); // sessions received from backend
-  const [filterValue, setFilterValue] = useState([]); // session filters on grid received from backend
   const [brasList, setBrasList] = useState([]); // bras list received from backend
   const [selectedBras, setSelectedBras] = useState(null); // currently selected bras
   const [gridSettings, setGridSettings] = useState({}); // grid settings received from backend (pagination, etc)
@@ -51,7 +50,6 @@ const App = () => {
       const columns = resp.data['columns'];
       processColumnSettings(columns);
       setColumns(columns);
-      setFilterValue(columns);
       setGridSettings(resp.data['gridSettings']);
       setBrasList(resp.data['brasList']);
       setToastSettings(resp.data['toastSettings']);
@@ -71,13 +69,13 @@ const App = () => {
   }, [])
 
   // (re)load session from backend
-  const loadSessions = async (dupSettings, reload = false, clearToasts = true) => {
+  const loadSessions = async (dupSettings, reload = false, clearToasts = true, brasOverride = selectedBras) => {
     if (clearToasts) {
       toast.clearWaitingQueue()
       toast.dismiss()
     }
     setDisableActions(true)
-    const sessions = await getSessions(selectedBras === null ? 'all' : selectedBras, reload ? lastDupSettings : dupSettings)
+    const sessions = await getSessions(brasOverride === null ? 'all' : brasOverride, reload ? lastDupSettings : dupSettings)
     if (typeof sessions === 'string') {
       toast.error('Error loading sessions at ' + getTime() + ': ' + sessions)
     } else {
@@ -89,11 +87,11 @@ const App = () => {
     setDisableActions(false)
   }
 
-  const loadStats = async (mode) => {
+  const loadStats = async (mode, brasOverride = selectedBras) => {
     toast.clearWaitingQueue()
     toast.dismiss()
     setDisableActions(true)
-    const stats = await getStats(selectedBras === null ? 'all' : selectedBras, mode)
+    const stats = await getStats(brasOverride === null ? 'all' : brasOverride, mode)
     if (typeof stats === 'string') {
       toast.error('Error loading stats at ' + getTime() + ': ' + stats)
     } else {
@@ -103,14 +101,21 @@ const App = () => {
     setDisableActions(false)
   }
 
+  // switch the active BNG and refresh the current view with it
+  const changeBras = (value) => {
+    setSelectedBras(value)
+    // A BNG switch is a fresh query, same as pressing "Get Sessions": the
+    // previous duplicate-search mode is intentionally not carried over.
+    if (whatToShow === 'sessions') loadSessions(undefined, false, true, value)
+    if (whatToShow === 'stats') loadStats('general', value)
+  }
+
   return (
     <div className={classes.App}>
       <ToastContainer {...toastSettings} />
       <Menu
         privileges={privileges}
-        selectedBras={selectedBras}
-        setSelectedBras={setSelectedBras}
-        brasList={brasList}
+        whatToShow={whatToShow}
         disableActions={disableActions}
         sessionInfoReady={sessionInfoReady}
         setWhatToShow={setWhatToShow}
@@ -125,11 +130,13 @@ const App = () => {
         whatToShow={whatToShow}
         columns={columns}
         sessions={sessions}
-        filterValue={filterValue}
         gridSettings={gridSettings}
         stats={stats}
         privileges={privileges} /* for dropping session */
         loadSessions={loadSessions} /* for dropping session */
+        brasList={brasList}
+        selectedBras={selectedBras}
+        changeBras={changeBras}
       />
 
       <Fab />

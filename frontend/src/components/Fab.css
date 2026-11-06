@@ -5,9 +5,9 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: var(--color-base-200, #e5e7eb);
-  color: var(--color-base-content, #1f2937);
-  border: none;
+  background-color: var(--awm-surface);
+  color: var(--awm-primary);
+  border: 1px solid var(--awm-border);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   font-size: 24px;
   display: grid;
@@ -18,9 +18,11 @@
 }
 
 .fab-custom:hover {
-  background-color: var(--color-base-300, #d1d5db);
+  background-color: var(--awm-soft);
   transform: scale(1.05);
 }
+
+.fab-custom:focus-within { outline: 2px solid var(--awm-primary); outline-offset: 3px; }
 
 /* daisyUI expects the theme-controller checkbox to be visually hidden */
 .fab-custom input.theme-controller {

@@ -1,4 +1,58 @@
-.IssueLabel {
-    cursor: pointer;
-    color: red;
+.Summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  min-width: 0;
+  color: var(--awm-muted);
+  font: 500 12px var(--awm-font-sans);
+  white-space: nowrap;
+}
+
+.StatusDot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: var(--awm-success);
+}
+
+.StatusIssue { background: var(--awm-error); }
+
+.Updated {
+  overflow: hidden;
+  color: var(--awm-muted);
+  text-overflow: ellipsis;
+}
+
+.Clock {
+  color: var(--awm-text);
+  font-family: var(--awm-font-mono);
+}
+
+.Metric {
+  color: var(--awm-muted);
+  color: var(--awm-text);
+  font: 500 11px var(--awm-font-mono);
+}
+
+.IssueChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--awm-error-bg);
+  border-radius: 8px;
+  background: var(--awm-error-bg);
+  color: var(--awm-error);
+  font: 600 12px var(--awm-font-sans);
+  cursor: pointer;
+}
+
+.IssueChip:hover { border-color: var(--awm-error); }
+
+@media (max-width: 560px) {
+  .Summary { gap: 10px; }
+  .Metric { display: none; }
 }

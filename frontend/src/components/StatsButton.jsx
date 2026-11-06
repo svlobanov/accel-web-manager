@@ -2,7 +2,7 @@ import { Dropdown, Button, ButtonGroup, Popover, IconButton, Whisper } from 'rsu
 
 import ArrowDownIcon from '@rsuite/icons/ArrowDown';
 
-const StatsButton = ({ children, loadStats, disabled }) => {
+const StatsButton = ({ children, loadStats, disabled, className }) => {
 
     const renderMenu = ({ onClose, left, top, className }, ref) => {
         const handleSelect = mode => {
@@ -19,7 +19,7 @@ const StatsButton = ({ children, loadStats, disabled }) => {
     }
 
     return (
-        <ButtonGroup size='xs'>
+        <ButtonGroup className={className} size='sm'>
             <Button onClick={() => loadStats("general")} disabled={disabled}>{children}</Button>
             <Whisper placement="bottom" trigger="click" speaker={renderMenu}>
                 <IconButton disabled={disabled} icon={<ArrowDownIcon />} />

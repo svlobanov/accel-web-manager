@@ -6,36 +6,43 @@ import { Flip, toast } from 'react-toastify';
 import classes from './InfoBox.module.css'
 
 import ListOfIssues from './ListOfIssues';
-import { getTime } from '../utils/getTime';
 
-const InfoBox = ({ sessions, stats }) => {
-    const [lastUpdated, setLastUpdated] = useState('never')
+const clockTime = () => new Date().toLocaleTimeString('pt-BR')
+
+const InfoBox = ({ sessions, stats, whatToShow }) => {
+    const [lastUpdated, setLastUpdated] = useState('aguardando dados')
     const [issues, setIssues] = useState({})
 
     // change last updated when update sesssions
     useEffect(() => {
-        if (sessions !== false) {
-            setLastUpdated(getTime() + " Total conectados:" + sessions['sessions'].length)
-            setIssues(sessions['issues'])
-        }
+        if (!sessions) return
+        setLastUpdated(clockTime())
+        setIssues(sessions.issues || {})
     }, [sessions])
 
     // change last updated when update stats
     useEffect(() => {
-        if (stats !== false) {
-            setLastUpdated(getTime() + " count:" + Object.keys(stats['stats']).length)
-            setIssues(stats['issues'])
-        }
+        if (!stats) return
+        setLastUpdated(clockTime())
+        setIssues(stats.issues || {})
     }, [stats])
 
+    const issueCount = Object.keys(issues).length
+    const sessionCount = sessions && sessions.sessions ? sessions.sessions.length : null
+    const brasCount = stats && stats.stats ? Object.keys(stats.stats).length : null
+
     return (
-        <div>
-            <label>Última&nbsp;atualização: {lastUpdated}</label>
-            {Object.keys(issues).length > 0 ?
-                <strong className={classes.IssueLabel} onClick={() => {
+        <div className={classes.Summary} role="status" aria-live="polite">
+            <span className={`${classes.StatusDot} ${issueCount ? classes.StatusIssue : ''}`} aria-hidden="true" />
+            <span className={classes.Updated}>Última atualização: <span className={classes.Clock}>{lastUpdated}</span></span>
+            {whatToShow === 'sessions' && sessionCount !== null && <span className={classes.Metric}>{sessionCount.toLocaleString('pt-BR')} sessões carregadas</span>}
+            {whatToShow === 'stats' && brasCount !== null && <span className={classes.Metric}>{brasCount.toLocaleString('pt-BR')} BNGs</span>}
+            {issueCount > 0 ?
+                <button type="button" className={classes.IssueChip} onClick={() => {
                     toast.error(<ListOfIssues issues={issues} />, { autoClose: false, transition: Flip })
-                }}> issues: {Object.keys(issues).length}
-                </strong>
+                }}>
+                    <span aria-hidden="true">!</span> Problemas: {issueCount}
+                </button>
                 :
                 ''
             }

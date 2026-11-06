@@ -34,25 +34,25 @@
   --log-info: #70d89a;
   --log-warn: #f5c66a;
   --log-error: #ff8796;
-  --log-token: #e2a4ff;
-  --log-interface: #8fc9ff;
+  --log-token: #a7e6b6;
+  --log-interface: #a8d7b5;
 }
 
 /* Inovua's filter editors keep their own theme classes; force them to follow
    the page palette when returning from the dark grid theme. */
-:root[data-theme='light'] .InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper {
-  background-color: var(--color-base-100);
-  border-top-color: var(--color-base-300);
+.InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper {
+  background-color: var(--awm-soft);
+  border-top-color: var(--awm-border);
 }
 
-:root[data-theme='light'] .InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper .inovua-react-toolkit-text-input,
-:root[data-theme='light'] .InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper .inovua-react-toolkit-date-input,
-:root[data-theme='light'] .InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper input,
-:root[data-theme='light'] .InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper select,
-:root[data-theme='light'] .InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper textarea {
-  color: var(--color-base-content);
-  background-color: var(--color-base-100);
-  border-color: var(--color-base-300);
+.InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper .inovua-react-toolkit-text-input,
+.InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper .inovua-react-toolkit-date-input,
+.InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper input,
+.InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper select,
+.InovuaReactDataGrid .InovuaReactDataGrid__column-header__filter-wrapper textarea {
+  color: var(--awm-text);
+  background-color: var(--awm-surface);
+  border-color: var(--awm-border);
 }
 
 /* The portal used by RSuite modals, pickers and notifications remains under

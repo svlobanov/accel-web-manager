@@ -1,18 +1,154 @@
-.Menu {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+.Shell {
+  position: relative;
+  z-index: 5;
+  flex: 0 0 auto;
+  background: var(--awm-surface);
+  color: var(--awm-text);
+  font-family: var(--awm-font-sans);
 }
 
-.MenuButtons {
-    text-align: left;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-left: 2px;
+.TopBar {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 80px;
+  padding: 0 24px;
+  background: var(--awm-surface);
 }
 
-.MenuInfo {
-    text-align: right;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-right: 2px;
+.Brand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.BrandLogo {
+  display: block;
+  width: auto;
+  height: 28px;
+}
+
+.ProductArea {
+  margin-left: 100px;
+  color: var(--awm-muted);
+  font: 400 11px var(--awm-font-mono);
+  white-space: nowrap;
+}
+
+.QuickActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 12px;
+}
+
+.QuickActions :global(.rs-btn-group) { display: inline-flex; }
+.QuickActions :global(.rs-btn) {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 0;
+  font: 500 13px var(--awm-font-sans);
+}
+.QuickActions :global(.rs-btn-icon) { width: 36px; min-width: 36px; padding: 0; }
+
+.SessionsAction :global(.rs-btn) {
+  border: 1px solid var(--awm-primary) !important;
+  background: var(--awm-primary) !important;
+  color: var(--awm-on-primary) !important;
+}
+.SessionsAction :global(.rs-btn:first-child) { border-radius: 8px 0 0 8px; }
+.SessionsAction :global(.rs-btn:last-child) {
+  border-radius: 0 8px 8px 0;
+  border-left: 1px solid color-mix(in srgb, var(--awm-on-primary) 35%, transparent) !important;
+}
+
+.StatsAction :global(.rs-btn),
+.LogsAction {
+  border: 1px solid var(--awm-border) !important;
+  background: var(--awm-surface) !important;
+  color: var(--awm-text) !important;
+}
+.StatsAction :global(.rs-btn:first-child) { border-radius: 8px 0 0 8px; }
+.StatsAction :global(.rs-btn:last-child) { border-radius: 0 8px 8px 0; }
+.StatsAction :global(.rs-btn:hover),
+.LogsAction:hover { background: var(--awm-soft) !important; }
+
+.QuickActions :global(.rs-btn:disabled),
+.LogsAction:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.LogsAction {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font: 600 12px var(--awm-font-sans);
+  cursor: pointer;
+}
+
+.StatusArea {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  color: var(--awm-success);
+  font: 500 11px var(--awm-font-sans);
+  white-space: nowrap;
+}
+
+.StatusDot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: var(--awm-warning);
+}
+
+.StatusReady .StatusDot { background: var(--awm-success); }
+
+.SummaryBar {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 24px;
+  background: var(--awm-surface);
+  border-top: 1px solid var(--awm-border);
+  border-bottom: 1px solid var(--awm-border);
+}
+
+@media (max-width: 1180px) {
+  .ProductArea { display: none; }
+  .TopBar { gap: 20px; }
+}
+
+@media (max-width: 900px) {
+  .TopBar {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+  .StatusArea { margin-left: auto; }
+  .SummaryBar { padding: 0 16px; }
+}
+
+@media (max-width: 720px) {
+  .TopBar { gap: 10px; }
+  .QuickActions { gap: 8px; margin-left: 0; }
+  .QuickActions :global(.rs-btn) { font-size: 12px; padding: 0 10px; }
+  .QuickActions :global(.rs-btn-icon) { width: 32px; min-width: 32px; }
+  .StatusLabel { display: none; }
+}
+
+@media (max-width: 560px) {
+  .TopBar { padding: 10px 12px; }
+  .SummaryBar { padding: 0 12px; }
+  .BrandLogo { height: 24px; }
+  .QuickActions { flex: 1 1 100%; justify-content: flex-start; }
+  .SessionsAction :global(.rs-btn) { font-size: 11px; padding: 0 8px; }
+  .SessionsAction :global(.rs-btn-icon) { width: 28px; min-width: 28px; }
+  .StatusArea { display: none; }
 }

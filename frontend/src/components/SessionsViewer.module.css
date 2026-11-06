@@ -1,3 +1,212 @@
 .Grid {
-    height: 100%;
+    /* Altura derivada da viewport com piso: em janelas baixas a página passa a
+       rolar para baixo em vez de espremer as linhas. 317px = top bar (80+44) +
+       cabeçalho/toolbar/margens, que é exatamente o offset do grid a 1440x900. */
+    flex: 0 0 auto;
+    height: calc(100vh - 317px);
+    height: calc(100dvh - 317px);
+    min-height: 560px;
+    width: calc(100% - 28px);
+    margin: 0 14px 14px;
+    box-sizing: border-box;
+    border: 1px solid var(--awm-border);
+    border-radius: 8px;
+    background: var(--awm-surface);
+    color: var(--awm-muted);
+    font-family: var(--awm-font-sans);
+    font-size: 11px;
+    overflow: hidden;
+}
+
+/* header */
+.Grid :global(.InovuaReactDataGrid__header-wrapper) {
+    background: var(--awm-soft);
+    border-bottom: 1px solid var(--awm-border);
+}
+
+.Grid :global(.InovuaReactDataGrid__column-header) {
+    background: var(--awm-soft);
+    color: var(--awm-muted);
+}
+
+.Grid :global(.InovuaReactDataGrid__column-header__content) {
+    padding: 0 12px;
+    color: var(--awm-muted);
+    font: 600 11px var(--awm-font-sans);
+}
+
+.ColumnHeaderContent { box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 4px; width: 100%; min-width: 0; padding-right: 24px; }
+.ColumnHeaderLine { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.ColumnHeaderLabel {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ActiveFilterIndicator:focus-visible,
+.ColumnFilterInput:focus-visible { outline: 2px solid var(--awm-primary); outline-offset: 2px; }
+.ActiveFilterIndicator {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: var(--awm-tint);
+    color: var(--awm-primary);
+    cursor: pointer;
+}
+.ColumnFilterInput {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: 25px;
+    padding: 0 6px;
+    border: 1px solid var(--awm-border);
+    border-radius: 4px;
+    background: var(--awm-surface);
+    color: var(--awm-text);
+    font: 11px var(--awm-font-sans);
+}
+
+/* sort/menu glyphs are drawn with fill, so recolor them for both themes */
+.Grid :global(.InovuaReactDataGrid__column-header svg) { fill: var(--awm-muted); }
+
+.Grid :global(.InovuaReactDataGrid__column-header__filter-wrapper) {
+    background: var(--awm-soft) !important;
+    border-top-color: var(--awm-border) !important;
+}
+
+.Grid :global(.InovuaReactDataGrid__column-header__filter-wrapper) input,
+.Grid :global(.InovuaReactDataGrid__column-header__filter-wrapper) select {
+    border-color: var(--awm-border);
+    background: var(--awm-surface);
+    color: var(--awm-text);
+    font-family: var(--awm-font-sans);
+    font-size: 11px;
+}
+
+/* rows */
+.Grid :global(.InovuaReactDataGrid__row) {
+    border-bottom: 1px solid var(--awm-border);
+}
+
+.Grid :global(.InovuaReactDataGrid__row--odd) { background: var(--awm-surface) !important; }
+.Grid :global(.InovuaReactDataGrid__row--even) { background: var(--awm-bg) !important; }
+.Grid :global(.InovuaReactDataGrid__row--selected) { background: var(--awm-tint) !important; }
+.Grid :global(.InovuaReactDataGrid__row:hover:not(.InovuaReactDataGrid__row--selected)) { background: var(--awm-soft) !important; }
+
+.Grid :global(.InovuaReactDataGrid__cell) {
+    padding: 0 12px !important;
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    color: var(--awm-muted);
+    font-size: 11px;
+}
+
+.Grid :global(.InovuaReactDataGrid__cell--cell-selected) { background: transparent !important; }
+
+.Grid :global(.InovuaReactDataGrid__cell__content) { color: inherit; }
+
+/* per-column presentation, applied through the column cellClassName */
+.Grid :global(.awm-cell--mono) {
+    color: var(--awm-muted);
+    font-family: var(--awm-font-mono);
+    font-size: 11px;
+}
+
+.Grid :global(.awm-cell--strong) {
+    color: var(--awm-text);
+    font-family: var(--awm-font-sans);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* session state badge */
+.Grid :global(.awm-state) {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font: 500 13px/1 var(--awm-font-sans);
+}
+
+.Grid :global(.awm-state--active) { background: var(--awm-success-bg); color: var(--awm-success); }
+.Grid :global(.awm-state--start) { background: var(--awm-warning-bg); color: var(--awm-warning); }
+.Grid :global(.awm-state--finish),
+.Grid :global(.awm-state--unk) { background: var(--awm-soft); color: var(--awm-muted); }
+
+/* pagination */
+/* Inovua also ships `.InovuaReactDataGrid--theme-* .inovua-react-pagination-toolbar--theme-*`,
+   which outranks a two-class selector, so the border must be forced. */
+.Grid :global(.inovua-react-pagination-toolbar) {
+    box-sizing: border-box;
+    min-height: 48px;
+    padding: 0 12px;
+    border: none !important;
+    border-top: 1px solid var(--awm-border) !important;
+    background: var(--awm-surface);
+    color: var(--awm-muted);
+    font-family: var(--awm-font-sans);
+    font-size: 11px;
+}
+
+.Grid :global(.inovua-react-pagination-toolbar button),
+.Grid :global(.inovua-react-pagination-toolbar select),
+.Grid :global(.inovua-react-pagination-toolbar input) {
+    min-height: 30px;
+    border: 1px solid var(--awm-border) !important;
+    border-radius: 6px;
+    background: var(--awm-surface) !important;
+    color: var(--awm-text) !important;
+}
+
+.Grid :global(.inovua-react-pagination-toolbar button:hover) {
+    background: var(--awm-soft) !important;
+}
+
+.Grid :global(.inovua-react-pagination-toolbar__page-text),
+.Grid :global(.inovua-react-pagination-toolbar__page-count-text) { color: var(--awm-muted); }
+
+/* The grid's dark theme hard-codes neutral fills on pagination widgets. Keep
+   the pager, page-size picker, and navigation icons on the app theme tokens. */
+.Grid :global(.inovua-react-pagination-toolbar--theme-default-dark),
+.Grid :global(.inovua-react-pagination-toolbar--theme-default-dark input),
+.Grid :global(.inovua-react-pagination-toolbar--theme-default-dark .inovua-react-toolkit-combo-box--theme-default-dark),
+.Grid :global(.inovua-react-pagination-toolbar--theme-default-dark .inovua-react-toolkit-combo-box__list),
+.Grid :global(.inovua-react-pagination-toolbar--theme-default-dark .inovua-react-toolkit-numeric-input--theme-default-dark) {
+    border-color: var(--awm-border) !important;
+    background-color: var(--awm-surface) !important;
+    color: var(--awm-text) !important;
+}
+
+.Grid :global(.inovua-react-pagination-toolbar--theme-default-dark .inovua-react-pagination-toolbar__icon) {
+    fill: var(--awm-muted) !important;
+    color: var(--awm-muted) !important;
+}
+
+.Grid :global(.inovua-react-pagination-toolbar--theme-default-dark .inovua-react-pagination-toolbar__icon--disabled) {
+    opacity: 0.45;
+}
+
+.Grid { scrollbar-color: var(--awm-border) var(--awm-bg); }
+.Grid::-webkit-scrollbar { width: 10px; height: 10px; }
+.Grid::-webkit-scrollbar-track { background: var(--awm-bg); }
+.Grid::-webkit-scrollbar-thumb { border: 2px solid var(--awm-bg); border-radius: 8px; background: var(--awm-border); }
+.Grid::-webkit-scrollbar-thumb:hover { background: var(--awm-muted); }
+
+@media (max-width: 900px) {
+    .Grid { width: calc(100% - 32px); margin: 0 16px 16px; }
+}
+
+@media (max-width: 560px) {
+    .Grid { width: calc(100% - 24px); margin: 0 12px 12px; }
 }
