@@ -28,6 +28,8 @@ const LogsViewer = () => {
     const [lines, setLines] = useState([]);
     const [search, setSearch] = useState('');
     const [levelFilter, setLevelFilter] = useState('all');
+    const [pollError, setPollError] = useState(false);
+    const [retryKey, setRetryKey] = useState(0);
     const cursor = useRef(null);
     const output = useRef(null);
 
@@ -42,11 +44,12 @@ const LogsViewer = () => {
                 if (!mounted) return;
                 const data = response.data;
                 cursor.current = data.cursor;
+                setPollError(false);
                 if (data.lines?.length) {
                     setLines(previous => [...previous, ...data.lines].slice(-2000));
                 }
             } catch {
-                // Keep the viewer focused on log content; transient API errors do not add status badges.
+                if (mounted) setPollError(true);
             }
         };
 
@@ -54,7 +57,7 @@ const LogsViewer = () => {
         timer = window.setInterval(poll, 1500);
 
         return () => { mounted = false; window.clearInterval(timer); };
-    }, []);
+    }, [retryKey]);
 
     const parsedLines = useMemo(() => lines.map(parseLogLine), [lines]);
     const counts = useMemo(() => parsedLines.reduce((result, line) => {
@@ -104,6 +107,10 @@ const LogsViewer = () => {
                     ))}
                 </div>
             </div>
+            {pollError && <div className={classes.pollError} role="alert">
+                <span>Não foi possível atualizar os logs. Exibindo as entradas já carregadas.</span>
+                <button type="button" onClick={() => setRetryKey(key => key + 1)}>Tentar novamente</button>
+            </div>}
             <div className={classes.output} ref={output} aria-live="polite">
                 {visibleLines.length ? visibleLines.map(line => (
                     <div className={classes.logRow} key={line.id}>
