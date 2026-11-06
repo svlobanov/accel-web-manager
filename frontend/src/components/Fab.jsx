@@ -26,7 +26,7 @@ export default function BotaoFlutuanteCustom() {
   const isDark = theme === 'synthwave';
 
   return (
-    <label className="fab-custom swap swap-rotate">
+    <label className="fab-custom fab-custom--header swap swap-rotate">
       {/* this hidden checkbox controls the state */}
       <input
         type="checkbox"

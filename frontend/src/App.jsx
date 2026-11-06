@@ -16,7 +16,6 @@ import classes from './App.module.css';
 
 import './custom-theme.less';
 
-import Fab from './components/Fab'; 
 
 const App = () => {
   const [whatToShow, setWhatToShow] = useState('sessions') // what to show (grid of sessions, stats, etc)
@@ -138,8 +137,6 @@ const App = () => {
         selectedBras={selectedBras}
         changeBras={changeBras}
       />
-
-      <Fab />
 
     </div>
   );

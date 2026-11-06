@@ -8,6 +8,7 @@
 }
 
 .TopBar {
+  position: relative;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -33,18 +34,13 @@
   filter: brightness(0) invert(1);
 }
 
-.ProductArea {
-  margin-left: 100px;
-  color: var(--awm-muted);
-  font: 400 11px var(--awm-font-mono);
-  white-space: nowrap;
-}
-
 .QuickActions {
+  position: absolute;
+  left: 50%;
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-left: 12px;
+  transform: translateX(-50%);
 }
 
 .QuickActions :global(.rs-btn-group) { display: inline-flex; }
@@ -95,8 +91,14 @@
 .StatusArea {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 12px;
   margin-left: auto;
+}
+
+.StatusMessage {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   color: var(--awm-success);
   font: 500 11px var(--awm-font-sans);
   white-space: nowrap;
@@ -123,11 +125,6 @@
   border-bottom: 1px solid var(--awm-border);
 }
 
-@media (max-width: 1180px) {
-  .ProductArea { display: none; }
-  .TopBar { gap: 20px; }
-}
-
 @media (max-width: 900px) {
   .TopBar {
     flex-wrap: wrap;
@@ -135,13 +132,14 @@
     gap: 12px;
     padding: 12px 16px;
   }
-  .StatusArea { margin-left: auto; }
+  .QuickActions { position: static; margin-left: auto; transform: none; }
+  .StatusArea { margin-left: 0; }
   .SummaryBar { padding: 0 16px; }
 }
 
 @media (max-width: 720px) {
   .TopBar { gap: 10px; }
-  .QuickActions { gap: 8px; margin-left: 0; }
+  .QuickActions { gap: 8px; margin-left: auto; }
   .QuickActions :global(.rs-btn) { font-size: 12px; padding: 0 10px; }
   .QuickActions :global(.rs-btn-icon) { width: 32px; min-width: 32px; }
   .StatusLabel { display: none; }
@@ -151,8 +149,9 @@
   .TopBar { padding: 10px 12px; }
   .SummaryBar { padding: 0 12px; }
   .BrandLogo { height: 24px; }
-  .QuickActions { flex: 1 1 100%; justify-content: flex-start; }
+  .QuickActions { flex: 1 1 100%; justify-content: center; margin: 0; }
   .SessionsAction :global(.rs-btn) { font-size: 11px; padding: 0 8px; }
   .SessionsAction :global(.rs-btn-icon) { width: 28px; min-width: 28px; }
-  .StatusArea { display: none; }
+  .StatusArea { margin-left: auto; }
+  .StatusMessage { display: none; }
 }

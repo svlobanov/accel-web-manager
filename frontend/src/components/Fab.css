@@ -17,6 +17,27 @@
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
+.fab-custom--header {
+  position: relative;
+  inset: auto;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  box-shadow: none;
+  font-size: 18px;
+  z-index: auto;
+  border-color: transparent;
+}
+
+.fab-custom--header svg {
+  width: 20px;
+  height: 20px;
+}
+
+.fab-custom--header:focus-within {
+  outline: none;
+}
+
 .fab-custom:hover {
   background-color: var(--awm-soft);
   transform: scale(1.05);
