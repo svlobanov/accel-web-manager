@@ -41,7 +41,7 @@ const InfoBox = ({ sessions, stats, whatToShow }) => {
                 <button type="button" className={classes.IssueChip} onClick={() => {
                     toast.error(<ListOfIssues issues={issues} />, { autoClose: false, transition: Flip })
                 }}>
-                    <span aria-hidden="true">!</span> Problemas: {issueCount}
+                    <span aria-hidden="true"></span> Problemas: {issueCount}
                 </button>
                 :
                 ''
