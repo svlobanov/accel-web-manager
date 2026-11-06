@@ -10,7 +10,7 @@ const Menu = ({ privileges, disableActions, sessionInfoReady, setWhatToShow,
         <header className={classes.Shell}>
             <div className={classes.TopBar}>
                 <div className={classes.Brand} aria-label="Accel Web Manager">
-                    <img className={classes.BrandLogo} src={`${import.meta.env.BASE_URL}logo.png`} alt="Accel Web Manager" />
+                    <img className={classes.BrandLogo} src={`${import.meta.env.BASE_URL}Accel.svg`} alt="Accel Web Manager" />
                 </div>
 
                 <span className={classes.ProductArea}>PPPoE / NOC</span>

@@ -29,6 +29,10 @@
   height: 28px;
 }
 
+:global(:root[data-theme='synthwave']) .BrandLogo {
+  filter: brightness(0) invert(1);
+}
+
 .ProductArea {
   margin-left: 100px;
   color: var(--awm-muted);
